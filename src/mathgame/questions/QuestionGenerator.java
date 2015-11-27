@@ -8,17 +8,12 @@ public class QuestionGenerator{
 		System.out.println(getProblem(QuestionTypes.ALGEBRA, 60).createPrompt(1));
 	}*/
 	
-	public static Answer getProblem(int type, int t) {
+	public static Answer getProblem(QuestionTypes type, int t) {
 		if(type==QuestionTypes.ALGEBRA){
 			return algebraQuestions(t);
 		}
 		return null;
-	}
-	
-	public interface QuestionTypes{
-		int ALGEBRA = 0;
-	}
-        
+	}        
 	
 	private static Answer algebraQuestions(int t){
 		// polynomial shits
