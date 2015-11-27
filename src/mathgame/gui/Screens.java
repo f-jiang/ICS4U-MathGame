@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mathgame;
+package mathgame.gui;
 
 import java.awt.CardLayout;
 
