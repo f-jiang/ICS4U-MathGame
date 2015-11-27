@@ -15,7 +15,24 @@ public class Answer {
         
         public String createPrompt(int type){
             if(type==PromptTypes.STANDARD){
-                // nothing here yet
+                // screw this
+                int[] coefficients = new int[roots.length+1];
+                coefficients[0] = 1;
+                coefficients[1] = (-roots[0])+(-roots[1]);
+                coefficients[2] = (-roots[0])*(-roots[1]);
+                for(int l=3;l<roots.length+1;l++){
+                    coefficients[l] = -roots[l-1];
+                    for(int m=0;m<l;m++){
+                        coefficients[m] += -roots[l-1];
+                    }
+                }
+                
+                String a = "";
+                for(int c=0;c<coefficients.length;c++){
+                    a += Integer.toString(coefficients[c])+"x^"+Integer.toString(coefficients.length-c);
+                }
+                
+                return a;
             }
             else if(type==PromptTypes.FACTORED){
                 String a = "";
