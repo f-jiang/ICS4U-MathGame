@@ -6,6 +6,9 @@
 package mathgame.gui;
 
 import java.awt.CardLayout;
+import javax.swing.JButton;
+import mathgame.game.Game;
+import mathgame.game.GameMode;
 
 /**
  *
@@ -250,14 +253,17 @@ public class Screens extends javax.swing.JFrame {
 
     private void algebraButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algebraButtonActionPerformed
         toGameScreen();
+        Game game = new Game(GameMode.ALGEBRA);
     }//GEN-LAST:event_algebraButtonActionPerformed
 
     private void geometryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geometryButtonActionPerformed
         toGameScreen();
+        Game game = new Game(GameMode.GEOMETRY);
     }//GEN-LAST:event_geometryButtonActionPerformed
 
     private void trigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trigButtonActionPerformed
         toGameScreen();
+        Game game = new Game(GameMode.TRIGONOMETRY);
     }//GEN-LAST:event_trigButtonActionPerformed
 
     private void eraseStatsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eraseStatsButtonActionPerformed
@@ -270,7 +276,7 @@ public class Screens extends javax.swing.JFrame {
     
     private void toGameScreen() {
         CardLayout card = (CardLayout) screens.getLayout();
-        card.show(screens, "gameScreen");        
+        card.show(screens, "gameScreen");
     }
     
     private void toStartScreen() {
