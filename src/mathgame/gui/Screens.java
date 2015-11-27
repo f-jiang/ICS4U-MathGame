@@ -5,6 +5,8 @@
  */
 package mathgame.gui;
 
+import java.awt.CardLayout;
+
 /**
  *
  * @author Feilan
@@ -52,21 +54,21 @@ public class Screens extends javax.swing.JFrame {
         java.awt.GridBagConstraints gridBagConstraints;
 
         screens = new javax.swing.JPanel();
-        gameScreen = new javax.swing.JPanel();
-        questionSplitPane = new javax.swing.JSplitPane();
-        questionContent = new javax.swing.JPanel();
-        answerContent = new javax.swing.JPanel();
-        quitButton = new javax.swing.JButton();
         startScreen = new javax.swing.JPanel();
         algebraButton = new javax.swing.JButton();
         geometryButton = new javax.swing.JButton();
         algebraStatsLabel = new javax.swing.JLabel();
         geometryStatsLabel = new javax.swing.JLabel();
         trigButton = new javax.swing.JButton();
-        resetStatsButton = new javax.swing.JButton();
+        eraseStatsButton = new javax.swing.JButton();
         trigStatsLabel = new javax.swing.JLabel();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        gameScreen = new javax.swing.JPanel();
+        questionSplitPane = new javax.swing.JSplitPane();
+        questionContent = new javax.swing.JPanel();
+        answerContent = new javax.swing.JPanel();
+        quitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,56 +76,16 @@ public class Screens extends javax.swing.JFrame {
         screens.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         screens.setLayout(new java.awt.CardLayout());
 
-        gameScreen.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        gameScreen.setLayout(new java.awt.BorderLayout(0, 10));
-
-        questionSplitPane.setResizeWeight(0.5);
-        questionSplitPane.setToolTipText("");
-        questionSplitPane.setEnabled(false);
-
-        javax.swing.GroupLayout questionContentLayout = new javax.swing.GroupLayout(questionContent);
-        questionContent.setLayout(questionContentLayout);
-        questionContentLayout.setHorizontalGroup(
-            questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 97, Short.MAX_VALUE)
-        );
-        questionContentLayout.setVerticalGroup(
-            questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 69, Short.MAX_VALUE)
-        );
-
-        questionSplitPane.setLeftComponent(questionContent);
-
-        javax.swing.GroupLayout answerContentLayout = new javax.swing.GroupLayout(answerContent);
-        answerContent.setLayout(answerContentLayout);
-        answerContentLayout.setHorizontalGroup(
-            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 97, Short.MAX_VALUE)
-        );
-        answerContentLayout.setVerticalGroup(
-            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 69, Short.MAX_VALUE)
-        );
-
-        questionSplitPane.setRightComponent(answerContent);
-
-        gameScreen.add(questionSplitPane, java.awt.BorderLayout.CENTER);
-
-        quitButton.setText("Quit");
-        quitButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                quitButtonActionPerformed(evt);
-            }
-        });
-        gameScreen.add(quitButton, java.awt.BorderLayout.PAGE_END);
-
-        screens.add(gameScreen, "startScreen");
-
         startScreen.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
         startScreen.setLayout(new java.awt.GridBagLayout());
 
         algebraButton.setText("Algebra/Functions");
         algebraButton.setPreferredSize(new java.awt.Dimension(100, 31));
+        algebraButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                algebraButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -134,6 +96,11 @@ public class Screens extends javax.swing.JFrame {
 
         geometryButton.setText("Geometry");
         geometryButton.setPreferredSize(new java.awt.Dimension(100, 31));
+        geometryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                geometryButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -181,15 +148,20 @@ public class Screens extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         startScreen.add(trigButton, gridBagConstraints);
 
-        resetStatsButton.setText("Erase Stats");
-        resetStatsButton.setPreferredSize(new java.awt.Dimension(100, 31));
+        eraseStatsButton.setText("Erase Stats");
+        eraseStatsButton.setPreferredSize(new java.awt.Dimension(100, 31));
+        eraseStatsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eraseStatsButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.3;
-        startScreen.add(resetStatsButton, gridBagConstraints);
+        startScreen.add(eraseStatsButton, gridBagConstraints);
 
         trigStatsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         trigStatsLabel.setText("jLabel3");
@@ -217,6 +189,51 @@ public class Screens extends javax.swing.JFrame {
 
         screens.add(startScreen, "startScreen");
 
+        gameScreen.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        gameScreen.setLayout(new java.awt.BorderLayout(0, 10));
+
+        questionSplitPane.setResizeWeight(0.5);
+        questionSplitPane.setToolTipText("");
+        questionSplitPane.setEnabled(false);
+
+        javax.swing.GroupLayout questionContentLayout = new javax.swing.GroupLayout(questionContent);
+        questionContent.setLayout(questionContentLayout);
+        questionContentLayout.setHorizontalGroup(
+            questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 97, Short.MAX_VALUE)
+        );
+        questionContentLayout.setVerticalGroup(
+            questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 69, Short.MAX_VALUE)
+        );
+
+        questionSplitPane.setLeftComponent(questionContent);
+
+        javax.swing.GroupLayout answerContentLayout = new javax.swing.GroupLayout(answerContent);
+        answerContent.setLayout(answerContentLayout);
+        answerContentLayout.setHorizontalGroup(
+            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 97, Short.MAX_VALUE)
+        );
+        answerContentLayout.setVerticalGroup(
+            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 69, Short.MAX_VALUE)
+        );
+
+        questionSplitPane.setRightComponent(answerContent);
+
+        gameScreen.add(questionSplitPane, java.awt.BorderLayout.CENTER);
+
+        quitButton.setText("Quit");
+        quitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitButtonActionPerformed(evt);
+            }
+        });
+        gameScreen.add(quitButton, java.awt.BorderLayout.PAGE_END);
+
+        screens.add(gameScreen, "gameScreen");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -231,18 +248,41 @@ public class Screens extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void algebraButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algebraButtonActionPerformed
+        toGameScreen();
+    }//GEN-LAST:event_algebraButtonActionPerformed
+
+    private void geometryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geometryButtonActionPerformed
+        toGameScreen();
+    }//GEN-LAST:event_geometryButtonActionPerformed
+
     private void trigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trigButtonActionPerformed
-        // TODO add your handling code here:
+        toGameScreen();
     }//GEN-LAST:event_trigButtonActionPerformed
 
-    private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
+    private void eraseStatsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eraseStatsButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_quitButtonActionPerformed
+    }//GEN-LAST:event_eraseStatsButtonActionPerformed
 
+    private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
+        toStartScreen();
+    }//GEN-LAST:event_quitButtonActionPerformed
+    
+    private void toGameScreen() {
+        CardLayout card = (CardLayout) screens.getLayout();
+        card.show(screens, "gameScreen");        
+    }
+    
+    private void toStartScreen() {
+        CardLayout card = (CardLayout) screens.getLayout();
+        card.show(screens, "startScreen");        
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton algebraButton;
     private javax.swing.JLabel algebraStatsLabel;
     private javax.swing.JPanel answerContent;
+    private javax.swing.JButton eraseStatsButton;
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
     private javax.swing.JPanel gameScreen;
@@ -251,7 +291,6 @@ public class Screens extends javax.swing.JFrame {
     private javax.swing.JPanel questionContent;
     private javax.swing.JSplitPane questionSplitPane;
     private javax.swing.JButton quitButton;
-    private javax.swing.JButton resetStatsButton;
     private javax.swing.JPanel screens;
     private javax.swing.JPanel startScreen;
     private javax.swing.JButton trigButton;
