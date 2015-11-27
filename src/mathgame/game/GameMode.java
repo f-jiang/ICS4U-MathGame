@@ -5,6 +5,8 @@
  */
 package mathgame.game;
 
+import mathgame.questions.QuestionTypes;
+
 /**
  *
  * @author feilan
@@ -15,9 +17,9 @@ public enum GameMode {
     GEOMETRY(),
     TRIGONOMETRY();
     
-    public final /*QuestionType*/int[] allowedQuestionTypes;
+    public final QuestionTypes[] allowedQuestionTypes;
     
-    GameMode(/*QuestionType*/int... allowed) {
+    GameMode(QuestionTypes... allowed) {
         this.allowedQuestionTypes = allowed;
     }
 }
