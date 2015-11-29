@@ -1,5 +1,7 @@
 package mathgame.questions;
 
+import mathgame.calculator.Calculator;
+
 public class Answer {
 	
 	static int[] roots;
@@ -60,7 +62,56 @@ public class Answer {
             return null;
         }
         
-        public String[] createFullSolution(int roots[]){
-            
+        public String createFullSolution(int promptType){
+            String banger = "";
+            if(promptType==PromptTypes.FACTORED){
+                for(int r:roots){
+                    if(r>0){ // positive 
+                        banger += "x - "+Math.abs(r)+" = 0";
+                        banger += "\nx = "+r+"\n";
+                    }else if(r<0){ // negative 
+                        banger += "x + "+Math.abs(r)+" = 0";
+                        banger += "\nx = "+r+"\n";
+                    }else{
+                        banger += "x = 0"+"\n";
+                    }
+                }
+                
+                return banger;
+            }
+            else if(promptType==PromptTypes.STANDARD){
+                // guess-and-check for roots
+                int dankerSteps = roots.length-1;
+                int[] check = {0, 1 , -1, 2, -2, 3, -3, 4, -4, 5, -5};
+                String expression;
+                for(int c:check){
+                    expression = createPrompt(PromptTypes.STANDARD);
+                    Calculator evaluation = new Calculator();
+                    evaluation.storeVariable("x", c);
+                    banger += "x = "+c+"\n";
+                    banger += expression.replace("x", "("+c+")")+" = "+evaluation.eval(expression, false)+"\n";
+                    
+                    if(evaluation.eval(expression, false).equals("0")){
+                        banger += "(x = "+c+") is a root. ";
+                        if(c>0){
+                            banger += "(x - "+c+")\n";
+                        }
+                        else if(c<0){
+                            banger += "(x + "+Math.abs(c)+")\n";
+                        }
+                        else{
+                            banger += "(x)\n";
+                        }
+                        
+                        banger += "\n";
+                        break;
+                    }
+                }
+                // now long division
+                
+                
+                return banger;
+            }
+            return null;
         }
 }
