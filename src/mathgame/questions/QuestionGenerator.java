@@ -13,7 +13,7 @@ public class QuestionGenerator{
 			return algebraQuestions(t);
 		}
 		return null;
-	}        
+	}
 	
 	private static Answer algebraQuestions(int t){
 		// polynomial shits
