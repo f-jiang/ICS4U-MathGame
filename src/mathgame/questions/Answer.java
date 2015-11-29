@@ -27,15 +27,23 @@ public class Answer {
                     }
                 }
                 
-                String a = "";
+                String a = "Identify the following expression's roots: ";
                 for(int c=0;c<coefficients.length;c++){
-                    a += Integer.toString(coefficients[c])+"x^"+Integer.toString(coefficients.length-c);
+                    if(c>0){
+                        if(coefficients[c]<0){
+                            a += " - "+Integer.toString(Math.abs(coefficients[c]))+"x^"+Integer.toString(coefficients.length-c)+" ";
+                        }else if(coefficients[c]>0){
+                            a += " + "+Integer.toString(coefficients[c])+"x^"+Integer.toString(coefficients.length-c)+" ";
+                        }
+                    }else{
+                        a += Integer.toString(coefficients[c])+"x^"+Integer.toString(coefficients.length-c)+" ";
+                    }
                 }
                 
                 return a;
             }
             else if(type==PromptTypes.FACTORED){
-                String a = "";
+                String a = "Identify the following expression's roots: ";
                 for(int b=0;b<roots.length;b++){
                     if(roots[b]<0){
                         a += "(x + "+Integer.toString(Math.abs(roots[b]))+")";
@@ -50,5 +58,9 @@ public class Answer {
                 return a;
             }
             return null;
+        }
+        
+        public String[] createFullSolution(int roots[]){
+            
         }
 }
