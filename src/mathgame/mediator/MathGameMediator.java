@@ -45,7 +45,7 @@ public class MathGameMediator {
     }
     
     public void questionAsked(String prompt/*whether question requires chart, diagram, etc.; how player will input answer(multiple choice or input text*/) {
-        
+        screens.loadQuestion(prompt);
     }
     
     public void statsReset() {

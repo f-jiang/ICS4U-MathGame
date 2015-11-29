@@ -14,7 +14,6 @@ import mathgame.questions.QuestionType;
 public enum GameMode {
     //TODO add allowed question types when enum complete
     ALGEBRA(),
-    GEOMETRY(),
     TRIGONOMETRY(),
     INACTIVE();
     

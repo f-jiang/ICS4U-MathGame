@@ -66,9 +66,7 @@ public class Screens extends javax.swing.JFrame {
         screens = new javax.swing.JPanel();
         startScreen = new javax.swing.JPanel();
         algebraButton = new javax.swing.JButton();
-        geometryButton = new javax.swing.JButton();
         algebraStatsLabel = new javax.swing.JLabel();
-        geometryStatsLabel = new javax.swing.JLabel();
         trigButton = new javax.swing.JButton();
         eraseStatsButton = new javax.swing.JButton();
         trigStatsLabel = new javax.swing.JLabel();
@@ -105,21 +103,6 @@ public class Screens extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         startScreen.add(algebraButton, gridBagConstraints);
 
-        geometryButton.setText("Geometry");
-        geometryButton.setPreferredSize(new java.awt.Dimension(100, 31));
-        geometryButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                geometryButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        startScreen.add(geometryButton, gridBagConstraints);
-
         algebraStatsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         algebraStatsLabel.setText("jLabel1");
         algebraStatsLabel.setFocusable(false);
@@ -132,18 +115,6 @@ public class Screens extends javax.swing.JFrame {
         gridBagConstraints.weighty = 0.3;
         startScreen.add(algebraStatsLabel, gridBagConstraints);
 
-        geometryStatsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        geometryStatsLabel.setText("jLabel2");
-        geometryStatsLabel.setFocusable(false);
-        geometryStatsLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
-        startScreen.add(geometryStatsLabel, gridBagConstraints);
-
         trigButton.setText("Trigonometry");
         trigButton.setPreferredSize(new java.awt.Dimension(100, 31));
         trigButton.addActionListener(new java.awt.event.ActionListener() {
@@ -152,8 +123,8 @@ public class Screens extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -168,7 +139,7 @@ public class Screens extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.3;
@@ -179,8 +150,8 @@ public class Screens extends javax.swing.JFrame {
         trigStatsLabel.setFocusable(false);
         trigStatsLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 0.3;
@@ -271,14 +242,6 @@ public class Screens extends javax.swing.JFrame {
         showGameScreen(GameMode.ALGEBRA);
     }//GEN-LAST:event_algebraButtonActionPerformed
 
-    private void geometryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geometryButtonActionPerformed
-        showGameScreen(GameMode.GEOMETRY);
-    }//GEN-LAST:event_geometryButtonActionPerformed
-
-    private void trigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trigButtonActionPerformed
-        showGameScreen(GameMode.TRIGONOMETRY);
-    }//GEN-LAST:event_trigButtonActionPerformed
-
     private void eraseStatsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eraseStatsButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_eraseStatsButtonActionPerformed
@@ -303,6 +266,22 @@ public class Screens extends javax.swing.JFrame {
             textField.setText((answer == null) ? "Error" : answer);
         }
     }//GEN-LAST:event_calculatorTextFieldKeyTyped
+
+    private void trigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trigButtonActionPerformed
+        showGameScreen(GameMode.TRIGONOMETRY);
+    }//GEN-LAST:event_trigButtonActionPerformed
+    
+    public void loadQuestion(String prompt) {
+        // show prompt in label
+        // if necessary, add graph or diagram
+        /* to load graph, we need to know:
+            -range of x and y-values to display
+            -axis names (e.g. is the y-axis called "y" or "f(x)"?)
+            -the function equation
+         */       
+        
+        // load multiple choice answers, or load textfield depending on question
+    }
     
     private void showGameScreen(GameMode gameMode) {
         CardLayout card = (CardLayout) screens.getLayout();
@@ -327,8 +306,6 @@ public class Screens extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
     private javax.swing.JPanel gameScreen;
-    private javax.swing.JButton geometryButton;
-    private javax.swing.JLabel geometryStatsLabel;
     private javax.swing.JPanel questionContent;
     private javax.swing.JSplitPane questionSplitPane;
     private javax.swing.JButton quitButton;
