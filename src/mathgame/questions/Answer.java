@@ -1,6 +1,6 @@
 package mathgame.questions;
 
-import mathgame.calculator.Calculator;
+import mathgame.util.calculator.Calculator;
 
 public class Answer {
 	
