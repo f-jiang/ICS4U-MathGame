@@ -6,9 +6,13 @@
 package mathgame.gui;
 
 import java.awt.CardLayout;
-import javax.swing.JButton;
-import mathgame.game.Game;
+import java.awt.event.KeyEvent;
+import javax.swing.JTextField;
 import mathgame.game.GameMode;
+import mathgame.util.calculator.Calculator;
+import mathgame.mediator.MathGameMediator;
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  *
@@ -18,8 +22,11 @@ public class Screens extends javax.swing.JFrame {
 
     /**
      * Creates new form Screens
+     * @param mediator
      */
-    public Screens() {
+    public Screens(MathGameMediator mediator) {        
+        this.mediator = mediator;
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -41,11 +48,11 @@ public class Screens extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Screens.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>        
+        //</editor-fold>                
         
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,6 +79,7 @@ public class Screens extends javax.swing.JFrame {
         questionContent = new javax.swing.JPanel();
         answerContent = new javax.swing.JPanel();
         quitButton = new javax.swing.JButton();
+        calculatorTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -203,11 +211,11 @@ public class Screens extends javax.swing.JFrame {
         questionContent.setLayout(questionContentLayout);
         questionContentLayout.setHorizontalGroup(
             questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 97, Short.MAX_VALUE)
+            .addGap(0, 76, Short.MAX_VALUE)
         );
         questionContentLayout.setVerticalGroup(
             questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 69, Short.MAX_VALUE)
+            .addGap(0, 72, Short.MAX_VALUE)
         );
 
         questionSplitPane.setLeftComponent(questionContent);
@@ -216,11 +224,11 @@ public class Screens extends javax.swing.JFrame {
         answerContent.setLayout(answerContentLayout);
         answerContentLayout.setHorizontalGroup(
             answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 97, Short.MAX_VALUE)
+            .addGap(0, 149, Short.MAX_VALUE)
         );
         answerContentLayout.setVerticalGroup(
             answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 69, Short.MAX_VALUE)
+            .addGap(0, 72, Short.MAX_VALUE)
         );
 
         questionSplitPane.setRightComponent(answerContent);
@@ -234,6 +242,14 @@ public class Screens extends javax.swing.JFrame {
             }
         });
         gameScreen.add(quitButton, java.awt.BorderLayout.PAGE_END);
+
+        calculatorTextField.setToolTipText("Calculator");
+        calculatorTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                calculatorTextFieldKeyTyped(evt);
+            }
+        });
+        gameScreen.add(calculatorTextField, java.awt.BorderLayout.PAGE_START);
 
         screens.add(gameScreen, "gameScreen");
 
@@ -252,18 +268,15 @@ public class Screens extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void algebraButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algebraButtonActionPerformed
-        toGameScreen();
-        Game game = new Game(GameMode.ALGEBRA);
+        showGameScreen(GameMode.ALGEBRA);
     }//GEN-LAST:event_algebraButtonActionPerformed
 
     private void geometryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_geometryButtonActionPerformed
-        toGameScreen();
-        Game game = new Game(GameMode.GEOMETRY);
+        showGameScreen(GameMode.GEOMETRY);
     }//GEN-LAST:event_geometryButtonActionPerformed
 
     private void trigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trigButtonActionPerformed
-        toGameScreen();
-        Game game = new Game(GameMode.TRIGONOMETRY);
+        showGameScreen(GameMode.TRIGONOMETRY);
     }//GEN-LAST:event_trigButtonActionPerformed
 
     private void eraseStatsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eraseStatsButtonActionPerformed
@@ -271,23 +284,45 @@ public class Screens extends javax.swing.JFrame {
     }//GEN-LAST:event_eraseStatsButtonActionPerformed
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
-        toStartScreen();
+        showStartScreen();
     }//GEN-LAST:event_quitButtonActionPerformed
+
+    private void calculatorTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_calculatorTextFieldKeyTyped
+        JTextField textField = (JTextField) evt.getSource();
+        
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER && !textField.getText().equals("")) {
+            String answer = Calculator.eval(textField.getText(), false);            
+            
+            /*javafx.embed.swing.JFXPanel panel = new javafx.embed.swing.JFXPanel();
+            javafx.scene.chart.NumberAxis xAxis = new javafx.scene.chart.NumberAxis(-10.0, 10.0, 1.0);
+            javafx.scene.chart.NumberAxis yAxis = new javafx.scene.chart.NumberAxis(-10.0, 10.0, 1.0);
+            FunctionPlot fp = new FunctionPlot(xAxis, yAxis, )
+            panel.add(fp);
+            questionContent.add(fp);*/
+                    
+            textField.setText((answer == null) ? "Error" : answer);
+        }
+    }//GEN-LAST:event_calculatorTextFieldKeyTyped
     
-    private void toGameScreen() {
+    private void showGameScreen(GameMode gameMode) {
         CardLayout card = (CardLayout) screens.getLayout();
         card.show(screens, "gameScreen");
+        mediator.gameStarted(gameMode);
     }
     
-    private void toStartScreen() {
+    private void showStartScreen() {
         CardLayout card = (CardLayout) screens.getLayout();
         card.show(screens, "startScreen");        
+        mediator.gameEnded();
     }
+
+    private MathGameMediator mediator;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton algebraButton;
     private javax.swing.JLabel algebraStatsLabel;
     private javax.swing.JPanel answerContent;
+    private javax.swing.JTextField calculatorTextField;
     private javax.swing.JButton eraseStatsButton;
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;

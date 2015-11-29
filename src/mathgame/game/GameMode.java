@@ -5,7 +5,7 @@
  */
 package mathgame.game;
 
-import mathgame.questions.QuestionTypes;
+import mathgame.questions.QuestionType;
 
 /**
  *
@@ -15,11 +15,12 @@ public enum GameMode {
     //TODO add allowed question types when enum complete
     ALGEBRA(),
     GEOMETRY(),
-    TRIGONOMETRY();
+    TRIGONOMETRY(),
+    INACTIVE();
     
-    public final QuestionTypes[] allowedQuestionTypes;
+    public final QuestionType[] allowedQuestionTypes;
     
-    GameMode(QuestionTypes... allowed) {
+    GameMode(QuestionType... allowed) {
         this.allowedQuestionTypes = allowed;
     }
 }

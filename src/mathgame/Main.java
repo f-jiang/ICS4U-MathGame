@@ -5,20 +5,34 @@
  */
 package mathgame;
 
+import mathgame.mediator.MathGameMediator;
 import mathgame.gui.Screens;
+import mathgame.game.Game;
+import mathgame.game.GameStats;
 
 /**
  *
  * @author Feilan
  */
 public class Main {
+        
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        MathGameMediator mediator = new MathGameMediator();
+        Screens screens = new Screens(mediator);
+        Game game = new Game(mediator);
+        GameStats gameStats = new GameStats(mediator);
+        
+        mediator.setGame(game);        
+        mediator.setScreens(screens);
+        mediator.setGameStats(gameStats);
+                
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new Screens().setVisible(true);
+            screens.setVisible(true);
         });
-    }    
+    }
+    
 }

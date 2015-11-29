@@ -1,4 +1,4 @@
-package mathgame.calculator;
+package mathgame.util.calculator;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;

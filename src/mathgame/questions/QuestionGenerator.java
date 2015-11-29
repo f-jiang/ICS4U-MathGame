@@ -8,8 +8,8 @@ public class QuestionGenerator{
 		System.out.println(getProblem(QuestionTypes.ALGEBRA, 60).createPrompt(1));
 	}*/
 	
-	public static Answer getProblem(QuestionTypes type, int t) {
-		if(type==QuestionTypes.ALGEBRA){
+	public static Answer getProblem(QuestionType type, int t) {
+		if(type==QuestionType.ALGEBRA){
 			return algebraQuestions(t);
 		}
 		return null;
