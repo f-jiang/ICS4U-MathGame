@@ -38,7 +38,7 @@ public class Game {
     private class CountdownTask extends TimerTask {
         @Override
         public void run() {
-            System.out.format("%d ms remaining%n", timeLeft);
+//            System.out.format("%d ms remaining%n", timeLeft);
             timeLeft -= COUNTDOWN_TICK_UNIT;            
         }
     }
@@ -52,7 +52,7 @@ public class Game {
     }    
     
     public void play(GameMode gameMode) {
-        System.out.println("new game");
+//        System.out.println("new game");
         this.mode = gameMode;
         this.questionTimer = new ReschedulableTimer();
         this.countdownTimer = new ReschedulableTimer();
@@ -62,7 +62,7 @@ public class Game {
     }
     
     public void quit() {
-        System.out.println("quit game");
+//        System.out.println("quit game");
         this.questionTimer.cancel();
         this.countdownTimer.cancel();
         this.mode = GameMode.INACTIVE;        
@@ -78,7 +78,7 @@ public class Game {
         if (isAnswerCorrect && timeLeft > 0) {
             // increase health and score
         } else {
-            System.out.println("time up");
+//            System.out.println("time up");
             // decrease health and score
         }
         
@@ -92,14 +92,14 @@ public class Game {
     }
     
     private void endGame() {
-        System.out.println("game over");
+//        System.out.println("game over");
         quit();
         
 //        tell mediator to show performance analysis
     }
     
     private void askQuestion() {
-        System.out.println("new question");
+//        System.out.println("new question");
         this.questionNumber++;
 //        generate question
 //        notify mediator
@@ -116,7 +116,7 @@ public class Game {
             this.countdownTimer.reschedule(0, COUNTDOWN_TICK_UNIT);
         }
             
-        System.out.format("next question scheduled to appear in %d ms%n", this.timeLeft);
+//        System.out.format("next question scheduled to appear in %d ms%n", this.timeLeft);
     }
     
 }

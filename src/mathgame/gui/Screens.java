@@ -5,14 +5,19 @@
  */
 package mathgame.gui;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.KeyEvent;
 import javax.swing.JTextField;
 import mathgame.game.GameMode;
 import mathgame.util.calculator.Calculator;
 import mathgame.mediator.MathGameMediator;
-import java.util.List;
-import java.util.LinkedList;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.DefaultXYDataset;
 
 /**
  *
@@ -178,17 +183,7 @@ public class Screens extends javax.swing.JFrame {
         questionSplitPane.setToolTipText("");
         questionSplitPane.setEnabled(false);
 
-        javax.swing.GroupLayout questionContentLayout = new javax.swing.GroupLayout(questionContent);
-        questionContent.setLayout(questionContentLayout);
-        questionContentLayout.setHorizontalGroup(
-            questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 76, Short.MAX_VALUE)
-        );
-        questionContentLayout.setVerticalGroup(
-            questionContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 72, Short.MAX_VALUE)
-        );
-
+        questionContent.setLayout(new java.awt.BorderLayout());
         questionSplitPane.setLeftComponent(questionContent);
 
         javax.swing.GroupLayout answerContentLayout = new javax.swing.GroupLayout(answerContent);
@@ -254,14 +249,17 @@ public class Screens extends javax.swing.JFrame {
         JTextField textField = (JTextField) evt.getSource();
         
         if (evt.getKeyChar() == KeyEvent.VK_ENTER && !textField.getText().equals("")) {
-            String answer = Calculator.eval(textField.getText(), false);            
+            String answer = Calculator.eval(textField.getText(), false);
             
-            /*javafx.embed.swing.JFXPanel panel = new javafx.embed.swing.JFXPanel();
-            javafx.scene.chart.NumberAxis xAxis = new javafx.scene.chart.NumberAxis(-10.0, 10.0, 1.0);
-            javafx.scene.chart.NumberAxis yAxis = new javafx.scene.chart.NumberAxis(-10.0, 10.0, 1.0);
-            FunctionPlot fp = new FunctionPlot(xAxis, yAxis, )
-            panel.add(fp);
-            questionContent.add(fp);*/
+            // temp code
+            JFreeChart lineChart = ChartFactory.createXYLineChart(
+                "f(x) = " + textField.getText(),
+                "x", "f(x)",
+                createDataset(textField.getText(), -10.0, 10.0),
+                PlotOrientation.VERTICAL,
+                true, true, false);
+            ChartPanel chartPanel = new ChartPanel(lineChart);
+            questionContent.add(chartPanel, BorderLayout.CENTER);
                     
             textField.setText((answer == null) ? "Error" : answer);
         }
@@ -295,7 +293,25 @@ public class Screens extends javax.swing.JFrame {
         mediator.gameEnded();
     }
 
+    private XYDataset createDataset(String function, double xmin, double xmax) {
+        final double tickValue = 0.1;
+        int numData = (int) Math.round((xmax - xmin) / tickValue);
+        double[][] data = new double[2][numData];
+        DefaultXYDataset dataset = new DefaultXYDataset();
+        
+        for (int i = 0; i < numData; i++, xmin += tickValue) {
+            data[0][i] = xmin;            
+            Calculator.storeVariable("x", xmin);
+            data[1][i] = Double.parseDouble(Calculator.eval(function, false));
+        }
+        
+        dataset.addSeries(function, data);
+        
+        return dataset;
+    }
+    
     private MathGameMediator mediator;
+    private ChartPanel chartPanel;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton algebraButton;
