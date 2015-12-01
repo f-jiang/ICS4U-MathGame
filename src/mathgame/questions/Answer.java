@@ -1,15 +1,19 @@
 package mathgame.questions;
 
+import java.util.Collections;
 import java.util.Random;
 import mathgame.util.calculator.Calculator;
 
 public class Answer {
     
         int[] roots;
+        
         double[][] triangle;
+        int[] visible;
         
         String prompt;
         String solution;
+        String[] multipleChoiceAnswers = new String[4];
         
         QuestionType questionType;
         
@@ -30,7 +34,8 @@ public class Answer {
                 for(int i=0;i<roots.length;i++){
                     roots[i] = new Random().nextInt(10) - 5;
                 }
-            }else if(questionType==QuestionType.TRIGONOMETRY){
+            }
+            else if(questionType==QuestionType.TRIGONOMETRY){
                 // side lengths: (first two created at random, hypotenuse by pyth. theorem)
                 Random a = new Random();
                 triangle[0][0] = (double) a.nextInt(24)+1;
@@ -41,13 +46,25 @@ public class Answer {
                 triangle[2][1] = Math.PI / 2;
                 triangle[1][1] = Math.asin(triangle[0][0]/triangle[2][0]);
                 triangle[0][1] = Math.asin(triangle[1][0]/triangle[2][0]);
+                
+                if(promptType==PromptTypes.SIDELENGTHS){
+                    int v1 = a.nextInt(2);
+                    int v2 = a.nextInt(2);
+                    while(v2==v1){
+                        v2 = a.nextInt(2);
+                    }
+                    visible = new int[]{v1, v2}; // values provided to the user to solve problem
+                }
+                else if(promptType==PromptTypes.ANGLES){
+                    visible = new int[]{a.nextInt(2)}; // angle provided to user to solve problem
+                }
             }
             
             prompt = createPrompt(promptType);
             solution = createFullSolution(promptType);
         }
         
-        public String createPrompt(int type){
+        private String createPrompt(int type){
             if(type==PromptTypes.STANDARD && questionType==QuestionType.ALGEBRA){
                 int[] coefficients = new int[roots.length+1];
                 coefficients[0] = 1;
@@ -90,10 +107,47 @@ public class Answer {
                 }
                 return a;
             }
+            else if(type==PromptTypes.ANGLES && questionType==QuestionType.TRIGONOMETRY){
+                String banger = "";
+                banger += "Angle A = "+triangle[visible[0]][1]+"\n";
+                banger += "Side a = "+triangle[visible[0]][0]+"\n";
+                Random b = new Random();
+                int v1 = b.nextInt(2);
+                while(v1==visible[0]){
+                    v1 = b.nextInt(2);
+                }
+                banger += "Side b = "+triangle[v1][0]+"\n";
+                int v2 = b.nextInt(2);
+                while(v2==visible[0] || v2==v1){
+                    v2 = b.nextInt(2);
+                }
+                banger += "Side c = "+triangle[v2][0]+"\n";
+                banger += "Find angles B and C.";
+                
+                multipleChoiceAnswers[0] = Double.toString(triangle[v1][1])+", "+Double.toString(triangle[v2][1]);
+                for(int i=1;i<4;i++){
+                    multipleChoiceAnswers[i] = Double.toString(Math.asin((b.nextInt(24)+1)/(b.nextInt(24)+1)));
+                    multipleChoiceAnswers[i] += ", "+Double.toString(Math.asin((b.nextInt(24)+1)/(b.nextInt(24)+1)));
+                }
+                // shuffle dis
+                
+                return banger;
+            }
+            else if(type==PromptTypes.SIDELENGTHS && questionType==QuestionType.TRIGONOMETRY){
+                String banger = "";
+                banger += "Side a = "+Double.toString(triangle[visible[0]][0])+"\n";
+                banger += "Side b = "+Double.toString(triangle[visible[1]][0])+"\n";
+                Random a = new Random();
+                int v = a.nextInt(2);
+                while(v==visible[0] || v==visible[1]){
+                    v = a.nextInt(2);
+                }
+                banger += "Angle c = "+Double.toString(triangle[v][1]);
+            }
             return null;
         }
         
-        public String createFullSolution(int promptType){
+        private String createFullSolution(int promptType){
             String banger = "";
             if(promptType==PromptTypes.FACTORED && questionType==QuestionType.ALGEBRA){
                 for(int r:roots){
@@ -111,37 +165,58 @@ public class Answer {
                 return banger;
             }
             else if(promptType==PromptTypes.STANDARD && questionType==QuestionType.ALGEBRA){
-                // guess-and-check for roots
-                int dankerSteps = roots.length-1;
-                int[] check = {0, 1 , -1, 2, -2, 3, -3, 4, -4, 5, -5};
-                String expression;
-                for(int c:check){
-                    expression = createPrompt(PromptTypes.STANDARD);
-                    Calculator evaluation = new Calculator();
-                    evaluation.storeVariable("x", c);
-                    banger += "x = "+c+"\n";
-                    banger += expression.replace("x", "("+c+")")+" = "+evaluation.eval(expression, false)+"\n";
-                    
-                    if(evaluation.eval(expression, false).equals("0")){
-                        banger += "(x = "+c+") is a root. ";
-                        if(c>0){
-                            banger += "(x - "+c+")\n";
+                if(roots.length==3){ // cubic
+                    // guess-and-check for roots
+                    int[] check = {0, 1 , -1, 2, -2, 3, -3, 4, -4, 5, -5};
+                    int ld=0;
+                    String expression;
+                    for(int c:check){
+                        expression = createPrompt(PromptTypes.STANDARD);
+                        Calculator evaluation = new Calculator();
+                        evaluation.storeVariable("x", c);
+                        banger += "x = "+c+"\n";
+                        banger += expression.replace("x", "("+c+")")+" = "+evaluation.eval(expression, false)+"\n";
+
+                        if(evaluation.eval(expression, false).equals("0")){
+                            banger += "(x = "+c+") is a root. ";
+                            if(c>0){
+                                banger += "(x - "+c+")\n";
+                            }
+                            else if(c<0){
+                                banger += "(x + "+Math.abs(c)+")\n";
+                            }
+                            else{
+                                banger += "(x)\n";
+                            }
+                            
+                            ld = c;
+                            banger += "\n";
+                            break;
                         }
-                        else if(c<0){
-                            banger += "(x + "+Math.abs(c)+")\n";
+                    }
+                    banger += "now long divide. You should end up with a quadratic which factors to\n";
+                    for(int r:roots){
+                        if(r!=ld){
+                            if(r>0){
+                                banger += "(x - "+r+")\n";
+                            }
+                            else if(r<0){
+                                banger += "(x + "+Math.abs(r)+")\n";
+                            }
+                            else{
+                                banger += "(x)\n";
+                            }
                         }
-                        else{
-                            banger += "(x)\n";
-                        }
-                        
-                        banger += "\n";
-                        break;
                     }
                 }
-                // now long division
-                
                 
                 return banger;
+            }
+            else if(promptType==PromptTypes.ANGLES && questionType==QuestionType.TRIGONOMETRY){
+                // nothing to bang
+            }
+            else if(promptType==PromptTypes.SIDELENGTHS && questionType==QuestionType.TRIGONOMETRY){
+                // nothing to bang
             }
             return null;
         }
