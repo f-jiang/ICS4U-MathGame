@@ -12,6 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import mathgame.game.GameMode;
+import mathgame.questions.Answer;
 import mathgame.util.calculator.Calculator;
 import mathgame.mediator.MathGameMediator;
 import org.jfree.chart.ChartPanel;
@@ -63,8 +64,8 @@ public class Screens extends javax.swing.JFrame {
         answerTextField.setToolTipText("Answer here");
         answerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-//                calculatorTextFieldKeyTyped(evt);
+            public void keyTyped(KeyEvent evt) {
+                answerTextFieldKeyTyped(evt);
             }
         });
     }
@@ -79,6 +80,9 @@ public class Screens extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jDialog1 = new javax.swing.JDialog();
+        scoreLabel = new javax.swing.JLabel();
+        returnButton = new javax.swing.JButton();
         screens = new javax.swing.JPanel();
         startScreen = new javax.swing.JPanel();
         algebraButton = new javax.swing.JButton();
@@ -94,6 +98,21 @@ public class Screens extends javax.swing.JFrame {
         answerContent = new javax.swing.JPanel();
         quitButton = new javax.swing.JButton();
         calculatorTextField = new javax.swing.JTextField();
+
+        jDialog1.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        scoreLabel.setText("jLabel1");
+        scoreLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        scoreLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jDialog1.getContentPane().add(scoreLabel, java.awt.BorderLayout.CENTER);
+
+        returnButton.setText("Return to Main Menu");
+        returnButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnButtonActionPerformed(evt);
+            }
+        });
+        jDialog1.getContentPane().add(returnButton, java.awt.BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -197,7 +216,7 @@ public class Screens extends javax.swing.JFrame {
         questionContent.setLayout(new java.awt.BorderLayout());
         questionSplitPane.setLeftComponent(questionContent);
 
-        answerContent.setLayout(new java.awt.GridLayout());
+        answerContent.setLayout(new java.awt.GridLayout(1, 0));
         questionSplitPane.setRightComponent(answerContent);
 
         gameScreen.add(questionSplitPane, java.awt.BorderLayout.CENTER);
@@ -211,6 +230,11 @@ public class Screens extends javax.swing.JFrame {
         gameScreen.add(quitButton, java.awt.BorderLayout.PAGE_END);
 
         calculatorTextField.setToolTipText("Calculator");
+        calculatorTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calculatorTextFieldActionPerformed(evt);
+            }
+        });
         calculatorTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 calculatorTextFieldKeyTyped(evt);
@@ -235,7 +259,8 @@ public class Screens extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void algebraButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algebraButtonActionPerformed
-        showGameScreen(GameMode.ALGEBRA);
+        mediator.gameStarted(GameMode.ALGEBRA);
+        showGameScreen();
     }//GEN-LAST:event_algebraButtonActionPerformed
 
     private void eraseStatsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eraseStatsButtonActionPerformed
@@ -243,6 +268,7 @@ public class Screens extends javax.swing.JFrame {
     }//GEN-LAST:event_eraseStatsButtonActionPerformed
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
+        mediator.gameQuit();
         showStartScreen();
     }//GEN-LAST:event_quitButtonActionPerformed
 
@@ -267,10 +293,30 @@ public class Screens extends javax.swing.JFrame {
     }//GEN-LAST:event_calculatorTextFieldKeyTyped
 
     private void trigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trigButtonActionPerformed
-        showGameScreen(GameMode.TRIGONOMETRY);
+        mediator.gameStarted(GameMode.ALGEBRA);
+        showGameScreen();
     }//GEN-LAST:event_trigButtonActionPerformed
+
+    private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
+        this.setEnabled(true);
+        jDialog1.setVisible(false);
+        showStartScreen();
+    }//GEN-LAST:event_returnButtonActionPerformed
+
+    private void calculatorTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculatorTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_calculatorTextFieldActionPerformed
     
-    public void loadQuestion(String prompt) {
+    private void answerTextFieldKeyTyped(KeyEvent evt) {
+        JTextField textField = (JTextField) evt.getSource();
+        String answer = textField.getText();
+        
+        if (evt.getKeyChar() == KeyEvent.VK_ENTER && !answer.equals("")) {        
+            mediator.questionAnswered(answer);
+        }
+    }
+    
+    public void loadQuestion(Answer question) {
         // show prompt in label
         // if necessary, add graph or diagram
         /* to load graph, we need to know:
@@ -283,19 +329,24 @@ public class Screens extends javax.swing.JFrame {
         
     }
     
-    private void showGameScreen(GameMode gameMode) {
+    public void endGame() {
+        scoreLabel.setText("Your score: ");
+        this.setEnabled(false);
+        jDialog1.pack();
+        jDialog1.setVisible(true);        
+    }
+    
+    private void showGameScreen() {
         CardLayout card = (CardLayout) screens.getLayout();
         card.show(screens, "gameScreen");
-        mediator.gameStarted(gameMode);
     }
     
     private void showStartScreen() {
         CardLayout card = (CardLayout) screens.getLayout();
-        card.show(screens, "startScreen");        
-        mediator.gameEnded(true);
+        card.show(screens, "startScreen");                
     }
 
-    private XYDataset createDataset(String function, double xmin, double xmax) {
+    /*private XYDataset createDataset(String function, double xmin, double xmax) {
         final double tickValue = 0.1;
         int numData = (int) Math.round((xmax - xmin) / tickValue);
         double[][] data = new double[2][numData];
@@ -310,11 +361,11 @@ public class Screens extends javax.swing.JFrame {
         dataset.addSeries(function, data);
         
         return dataset;
-    }
+    }*/
     
     private MathGameMediator mediator;
     private JLabel promptLabel;
-    private ChartPanel promptChartPanel;
+//    private ChartPanel promptChartPanel;
     private JTextField answerTextField;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -326,9 +377,12 @@ public class Screens extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
     private javax.swing.JPanel gameScreen;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JPanel questionContent;
     private javax.swing.JSplitPane questionSplitPane;
     private javax.swing.JButton quitButton;
+    private javax.swing.JButton returnButton;
+    private javax.swing.JLabel scoreLabel;
     private javax.swing.JPanel screens;
     private javax.swing.JPanel startScreen;
     private javax.swing.JButton trigButton;

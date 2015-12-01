@@ -5,6 +5,7 @@
  */
 package mathgame.mediator;
 
+import mathgame.questions.Answer;
 import mathgame.game.Game;
 import mathgame.game.GameMode;
 import mathgame.game.GameStats;
@@ -36,8 +37,12 @@ public class MathGameMediator {
         game.play(gameMode);
     }
     
-    public void gameEnded(boolean quit) {
+    public void gameQuit() {
         game.quit();
+    } 
+   
+    public void gameEnded() {
+        screens.endGame();
     }
     
     public void questionAnswered(String answer) {   // TODO: implement in Screens
@@ -45,8 +50,8 @@ public class MathGameMediator {
     }
     
     // TODO: implement in Game
-    public void questionAsked(String prompt/*whether question requires chart, diagram, etc.; how player will input answer(multiple choice or input text*/) {
-        screens.loadQuestion(prompt);
+    public void questionAsked(Answer question) {
+        screens.loadQuestion(question);
     }
     
     public void statsReset() {

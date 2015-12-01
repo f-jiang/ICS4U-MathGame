@@ -6,6 +6,7 @@
 package mathgame.game;
 
 import mathgame.mediator.MathGameMediator;
+import mathgame.questions.Answer;
 import mathgame.util.calculator.Calculator;
 import mathgame.util.ReschedulableTimer;
 import java.util.TimerTask;
@@ -25,6 +26,7 @@ public class Game {
     private ReschedulableTimer questionTimer;
     private ReschedulableTimer countdownTimer;
     private int health;
+    private int score;
     private int questionNumber;
     private long timeLeft;    
     
@@ -52,7 +54,7 @@ public class Game {
     }    
     
     public void play(GameMode gameMode) {
-//        System.out.println("new game");
+        System.out.println("new game");
         this.mode = gameMode;
         this.questionTimer = new ReschedulableTimer();
         this.countdownTimer = new ReschedulableTimer();
@@ -62,7 +64,7 @@ public class Game {
     }
     
     public void quit() {
-//        System.out.println("quit game");
+        System.out.println("quit game");
         this.questionTimer.cancel();
         this.countdownTimer.cancel();
         this.mode = GameMode.INACTIVE;        
@@ -76,10 +78,10 @@ public class Game {
     
     private void endQuestion(boolean isAnswerCorrect) {
         if (isAnswerCorrect && timeLeft > 0) {
-            // increase health and score
+            this.health += 10;
         } else {
-//            System.out.println("time up");
-            // decrease health and score
+            System.out.println("time up");
+            this.health -= 20;
         }
         
         // update stats
@@ -92,18 +94,19 @@ public class Game {
     }
     
     private void endGame() {
-//        System.out.println("game over");
+        System.out.println("game over");
         quit();
         
-//        tell mediator to show performance analysis
+        mediator.gameEnded();
     }
     
     private void askQuestion() {
-//        System.out.println("new question");
+        System.out.println("new question");
         this.questionNumber++;
 //        generate question
 //        notify mediator
-        mediator.questionAsked(new String());
+//      pick random value from gameMode.allowedQuestionTypes
+//        mediator.questionAsked();
 
         
         String exp = String.format(TIME_CURVE_FUNCTION, this.questionNumber);
@@ -117,7 +120,7 @@ public class Game {
             this.countdownTimer.reschedule(0, COUNTDOWN_TICK_UNIT);
         }
             
-//        System.out.format("next question scheduled to appear in %d ms%n", this.timeLeft);
+        System.out.format("next question scheduled to appear in %d ms%n", this.timeLeft);
     }
     
 }
