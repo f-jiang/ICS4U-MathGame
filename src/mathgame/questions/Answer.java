@@ -45,20 +45,20 @@ public class Answer {
         
         public Answer(QuestionType qType, PromptType promptType){
             this.isMultipleChoice = (qType == QuestionType.TRIGONOMETRY);
-            roots = new int[new Random().nextInt(1) + 1];
+            roots = new int[new Random().nextInt(2) + 2];
             triangle = new double[3][2];
             
             questionType = qType;
             if(questionType==QuestionType.ALGEBRA){
                 for(int i=0;i<roots.length;i++){
-                    roots[i] = new Random().nextInt(10) - 5;
+                    roots[i] = new Random().nextInt(11) - 5;
                 }
             }
             else if(questionType==QuestionType.TRIGONOMETRY){
                 // side lengths: (first two created at random, hypotenuse by pyth. theorem)
                 Random a = new Random();
-                triangle[0][0] = (double) a.nextInt(24)+1;
-                triangle[1][0] = (double) a.nextInt(24)+1;
+                triangle[0][0] = (double) a.nextInt(25)+1;
+                triangle[1][0] = (double) a.nextInt(25)+1;
                 triangle[2][0] = Math.sqrt(Math.pow(triangle[0][0],2)+Math.pow(triangle[1][0],2));
                 
                 // angles:
@@ -67,15 +67,15 @@ public class Answer {
                 triangle[0][1] = Math.asin(triangle[1][0]/triangle[2][0]);
                 
                 if(promptType==PromptType.SIDELENGTHS){
-                    int v1 = a.nextInt(2);
-                    int v2 = a.nextInt(2);
+                    int v1 = a.nextInt(3);
+                    int v2 = a.nextInt(3);
                     while(v2==v1){
-                        v2 = a.nextInt(2);
+                        v2 = a.nextInt(3);
                     }
                     visible = new int[]{v1, v2}; // values provided to the user to solve problem
                 }
                 else if(promptType==PromptType.ANGLES){
-                    visible = new int[]{a.nextInt(2)}; // angle provided to user to solve problem
+                    visible = new int[]{a.nextInt(3)}; // angle provided to user to solve problem
                 }
             }
             
@@ -132,22 +132,22 @@ public class Answer {
                 banger += "Angle A = "+triangle[visible[0]][1]+"\n";
                 banger += "Side a = "+triangle[visible[0]][0]+"\n";
                 Random b = new Random();
-                int v1 = b.nextInt(2);
+                int v1 = b.nextInt(3);
                 while(v1==visible[0]){
-                    v1 = b.nextInt(2);
+                    v1 = b.nextInt(3);
                 }
                 banger += "Side b = "+triangle[v1][0]+"\n";
-                int v2 = b.nextInt(2);
+                int v2 = b.nextInt(3);
                 while(v2==visible[0] || v2==v1){
-                    v2 = b.nextInt(2);
+                    v2 = b.nextInt(3);
                 }
                 banger += "Side c = "+triangle[v2][0]+"\n";
                 banger += "Find angles B and C.";
                 
                 multipleChoiceAnswers[0] = Double.toString(triangle[v1][1])+", "+Double.toString(triangle[v2][1]);
                 for(int i=1;i<4;i++){
-                    multipleChoiceAnswers[i] = Double.toString(Math.asin((b.nextInt(24)+1)/(b.nextInt(24)+1)));
-                    multipleChoiceAnswers[i] += ", "+Double.toString(Math.asin((b.nextInt(24)+1)/(b.nextInt(24)+1)));
+                    multipleChoiceAnswers[i] = Double.toString(Math.asin((b.nextInt(25)+1)/(b.nextInt(25)+1)));
+                    multipleChoiceAnswers[i] += ", "+Double.toString(Math.asin((b.nextInt(25)+1)/(b.nextInt(25)+1)));
                 }
                 // shuffle dis
                 
@@ -158,16 +158,16 @@ public class Answer {
                 banger += "Side a = "+Double.toString(triangle[visible[0]][0])+"\n";
                 banger += "Side b = "+Double.toString(triangle[visible[1]][0])+"\n";
                 Random a = new Random();
-                int v = a.nextInt(2);
+                int v = a.nextInt(3);
                 while(v==visible[0] || v==visible[1]){
-                   v  = a.nextInt(2);
+                   v  = a.nextInt(3);
                 }
                 banger += "Angle C = "+Double.toString(triangle[v][1])+"\n";
                 banger += "Find side length c.";
                 
                 multipleChoiceAnswers[0] = Double.toString(triangle[v][0]);
                 for(int i=1;i<4;i++){
-                    multipleChoiceAnswers[i] = Integer.toString(a.nextInt(24)+1);
+                    multipleChoiceAnswers[i] = Integer.toString(a.nextInt(25)+1);
                 }
                 // shuffle dis
                 
