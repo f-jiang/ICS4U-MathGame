@@ -14,6 +14,7 @@ public class Answer {
         String prompt;
         String solution;
         String[] multipleChoiceAnswers = new String[4];
+        int correctAnswerIndex;
         
         QuestionType questionType;
         
@@ -62,6 +63,7 @@ public class Answer {
             
             prompt = createPrompt(promptType);
             solution = createFullSolution(promptType);
+            randomiseMultipleChoiceOrder();
         }
         
         private String createPrompt(int type){
@@ -149,6 +151,9 @@ public class Answer {
                 for(int i=1;i<4;i++){
                     multipleChoiceAnswers[i] = Integer.toString(a.nextInt(24)+1);
                 }
+                // shuffle dis
+                
+                return banger;
             }
             return null;
         }
@@ -225,5 +230,28 @@ public class Answer {
                 // nothing to bang
             }
             return null;
+        }
+        
+        private void randomiseMultipleChoiceOrder(){
+            int index;
+            Random random = new Random();
+            int[] array = {0,1,2,3};
+            for (int i = array.length - 1; i > 0; i--)
+            {
+                index = random.nextInt(i + 1);
+                if (index != i)
+                {
+                    array[index] ^= array[i];
+                    array[i] ^= array[index];
+                    array[index] ^= array[i];
+                }
+            }
+            String[] danker = multipleChoiceAnswers;
+            for(int i=0;i<4;i++){
+                multipleChoiceAnswers[array[i]] = danker[i];
+                if(array[i]==0){
+                    correctAnswerIndex = i;
+                }
+            }
         }
 }
