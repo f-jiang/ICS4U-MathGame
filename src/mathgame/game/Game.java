@@ -103,7 +103,8 @@ public class Game {
         this.questionNumber++;
 //        generate question
 //        notify mediator
-        
+        mediator.questionAsked(new String());
+
         
         String exp = String.format(TIME_CURVE_FUNCTION, this.questionNumber);
         this.timeLeft = (long) Double.parseDouble(Calculator.eval(exp, false));

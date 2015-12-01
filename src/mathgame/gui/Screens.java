@@ -6,9 +6,11 @@
 package mathgame.gui;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.CardLayout;
 import java.awt.event.KeyEvent;
 import javax.swing.JTextField;
+import javax.swing.JLabel;
 import mathgame.game.GameMode;
 import mathgame.util.calculator.Calculator;
 import mathgame.mediator.MathGameMediator;
@@ -56,6 +58,15 @@ public class Screens extends javax.swing.JFrame {
         //</editor-fold>                
         
         initComponents();
+                
+        answerTextField = new JTextField();
+        answerTextField.setToolTipText("Answer here");
+        answerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+//                calculatorTextFieldKeyTyped(evt);
+            }
+        });
     }
     
     /**
@@ -186,17 +197,7 @@ public class Screens extends javax.swing.JFrame {
         questionContent.setLayout(new java.awt.BorderLayout());
         questionSplitPane.setLeftComponent(questionContent);
 
-        javax.swing.GroupLayout answerContentLayout = new javax.swing.GroupLayout(answerContent);
-        answerContent.setLayout(answerContentLayout);
-        answerContentLayout.setHorizontalGroup(
-            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 149, Short.MAX_VALUE)
-        );
-        answerContentLayout.setVerticalGroup(
-            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 72, Short.MAX_VALUE)
-        );
-
+        answerContent.setLayout(new java.awt.GridLayout());
         questionSplitPane.setRightComponent(answerContent);
 
         gameScreen.add(questionSplitPane, java.awt.BorderLayout.CENTER);
@@ -252,14 +253,14 @@ public class Screens extends javax.swing.JFrame {
             String answer = Calculator.eval(textField.getText(), false);
             
             // temp code
-            JFreeChart lineChart = ChartFactory.createXYLineChart(
+            /*JFreeChart lineChart = ChartFactory.createXYLineChart(
                 "f(x) = " + textField.getText(),
                 "x", "f(x)",
                 createDataset(textField.getText(), -10.0, 10.0),
                 PlotOrientation.VERTICAL,
                 true, true, false);
             ChartPanel chartPanel = new ChartPanel(lineChart);
-            questionContent.add(chartPanel, BorderLayout.CENTER);
+            questionContent.add(chartPanel, BorderLayout.CENTER);*/
                     
             textField.setText((answer == null) ? "Error" : answer);
         }
@@ -279,6 +280,7 @@ public class Screens extends javax.swing.JFrame {
          */       
         
         // load multiple choice answers, or load textfield depending on question
+        
     }
     
     private void showGameScreen(GameMode gameMode) {
@@ -290,7 +292,7 @@ public class Screens extends javax.swing.JFrame {
     private void showStartScreen() {
         CardLayout card = (CardLayout) screens.getLayout();
         card.show(screens, "startScreen");        
-        mediator.gameEnded();
+        mediator.gameEnded(true);
     }
 
     private XYDataset createDataset(String function, double xmin, double xmax) {
@@ -302,7 +304,7 @@ public class Screens extends javax.swing.JFrame {
         for (int i = 0; i < numData; i++, xmin += tickValue) {
             data[0][i] = xmin;            
             Calculator.storeVariable("x", xmin);
-            data[1][i] = Double.parseDouble(Calculator.eval(function, false));
+            data[1][i] = Double.parseDouble(Calculator.eval(function, false)); //null for small values
         }
         
         dataset.addSeries(function, data);
@@ -311,7 +313,9 @@ public class Screens extends javax.swing.JFrame {
     }
     
     private MathGameMediator mediator;
-    private ChartPanel chartPanel;
+    private JLabel promptLabel;
+    private ChartPanel promptChartPanel;
+    private JTextField answerTextField;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton algebraButton;

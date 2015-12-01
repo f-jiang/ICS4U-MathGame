@@ -36,14 +36,15 @@ public class MathGameMediator {
         game.play(gameMode);
     }
     
-    public void gameEnded() {
+    public void gameEnded(boolean quit) {
         game.quit();
     }
     
-    public void questionAnswered(String answer) {
+    public void questionAnswered(String answer) {   // TODO: implement in Screens
         game.answerQuestion(answer);
     }
     
+    // TODO: implement in Game
     public void questionAsked(String prompt/*whether question requires chart, diagram, etc.; how player will input answer(multiple choice or input text*/) {
         screens.loadQuestion(prompt);
     }
