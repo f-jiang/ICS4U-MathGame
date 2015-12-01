@@ -1,5 +1,5 @@
 package mathgame.questions;
 
 public enum QuestionType {
-    ALGEBRA
+    ALGEBRA, TRIGONOMETRY
 }

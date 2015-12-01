@@ -1,23 +1,50 @@
 package mathgame.questions;
 
+import java.util.Random;
 import mathgame.util.calculator.Calculator;
 
 public class Answer {
-	
-	static int[] roots;
+    
+        int[] roots;
+        int[][] triangle;
+        
+        String prompt;
+        String solution;
+        
+        QuestionType questionType;
         
         public interface PromptTypes{
             int STANDARD = 0;
             int FACTORED = 1;
+            
+            int SIDELENGTHS = 0;
+            int ANGLES = 1;
         }
         
-        public Answer(int t){
-            roots = new int[t];
+        public Answer(QuestionType qType, int promptType){
+            roots = new int[new Random().nextInt(1) + 1];
+            triangle = new int[3][2];
+            
+            questionType = qType;
+            if(questionType==QuestionType.ALGEBRA){
+                for(int i=0;i<roots.length;i++){
+                    roots[i] = new Random().nextInt(10) - 5;
+                }
+            }else if(questionType==QuestionType.TRIGONOMETRY){
+                for(int l=0;l<3;l++){
+                    // angle:
+                    
+                    // side length:
+                    
+                }
+            }
+            
+            prompt = createPrompt(promptType);
+            solution = createFullSolution(promptType);
         }
         
         public String createPrompt(int type){
-            if(type==PromptTypes.STANDARD){
-                // screw this
+            if(type==PromptTypes.STANDARD && questionType==QuestionType.ALGEBRA){
                 int[] coefficients = new int[roots.length+1];
                 coefficients[0] = 1;
                 coefficients[1] = (-roots[0])+(-roots[1]);
@@ -44,7 +71,7 @@ public class Answer {
                 
                 return a;
             }
-            else if(type==PromptTypes.FACTORED){
+            else if(type==PromptTypes.FACTORED && questionType==QuestionType.ALGEBRA){
                 String a = "Identify the following expression's roots: ";
                 for(int b=0;b<roots.length;b++){
                     if(roots[b]<0){
@@ -64,7 +91,7 @@ public class Answer {
         
         public String createFullSolution(int promptType){
             String banger = "";
-            if(promptType==PromptTypes.FACTORED){
+            if(promptType==PromptTypes.FACTORED && questionType==QuestionType.ALGEBRA){
                 for(int r:roots){
                     if(r>0){ // positive 
                         banger += "x - "+Math.abs(r)+" = 0";
@@ -79,7 +106,7 @@ public class Answer {
                 
                 return banger;
             }
-            else if(promptType==PromptTypes.STANDARD){
+            else if(promptType==PromptTypes.STANDARD && questionType==QuestionType.ALGEBRA){
                 // guess-and-check for roots
                 int dankerSteps = roots.length-1;
                 int[] check = {0, 1 , -1, 2, -2, 3, -3, 4, -4, 5, -5};
