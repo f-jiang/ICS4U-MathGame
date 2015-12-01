@@ -16,7 +16,8 @@ import java.util.LinkedList;
 public class GameStats {
         
     private MathGameMediator mediator;
-    
+   
+    // TODO: implement GameStats class
     public GameStats(MathGameMediator mediator) {
         this.mediator = mediator;
     }

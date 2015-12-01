@@ -45,11 +45,10 @@ public class MathGameMediator {
         screens.endGame();
     }
     
-    public void questionAnswered(String answer) {   // TODO: implement in Screens
+    public void questionAnswered(String answer) {
         game.answerQuestion(answer);
     }
     
-    // TODO: implement in Game
     public void questionAsked(Answer question) {
         screens.loadQuestion(question);
     }

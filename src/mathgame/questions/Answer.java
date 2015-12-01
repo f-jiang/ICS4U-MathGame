@@ -15,18 +15,36 @@ public class Answer {
         String solution;
         String[] multipleChoiceAnswers = new String[4];
         int correctAnswerIndex;
+        boolean isMultipleChoice;
         
         QuestionType questionType;
         
-        public interface PromptTypes{
-            int STANDARD = 0;
-            int FACTORED = 1;
-            
-            int SIDELENGTHS = 0;
-            int ANGLES = 1;
+        public String getPrompt() {
+            return prompt;
+        }
+
+        public String getSolution() {
+            return solution;
+        }
+
+        public String[] getMultipleChoiceAnswers() {
+            return multipleChoiceAnswers;
+        }
+
+        public int getCorrectAnswerIndex() {
+            return correctAnswerIndex;
+        }        
+
+        public boolean isMultipleChoice() {
+            return isMultipleChoice;
         }
         
-        public Answer(QuestionType qType, int promptType){
+        public enum PromptType {
+            STANDARD, FACTORED, SIDELENGTHS, ANGLES
+        }
+        
+        public Answer(QuestionType qType, PromptType promptType){
+            this.isMultipleChoice = (qType == QuestionType.TRIGONOMETRY);
             roots = new int[new Random().nextInt(1) + 1];
             triangle = new double[3][2];
             
@@ -48,7 +66,7 @@ public class Answer {
                 triangle[1][1] = Math.asin(triangle[0][0]/triangle[2][0]);
                 triangle[0][1] = Math.asin(triangle[1][0]/triangle[2][0]);
                 
-                if(promptType==PromptTypes.SIDELENGTHS){
+                if(promptType==PromptType.SIDELENGTHS){
                     int v1 = a.nextInt(2);
                     int v2 = a.nextInt(2);
                     while(v2==v1){
@@ -56,7 +74,7 @@ public class Answer {
                     }
                     visible = new int[]{v1, v2}; // values provided to the user to solve problem
                 }
-                else if(promptType==PromptTypes.ANGLES){
+                else if(promptType==PromptType.ANGLES){
                     visible = new int[]{a.nextInt(2)}; // angle provided to user to solve problem
                 }
             }
@@ -66,8 +84,8 @@ public class Answer {
             randomiseMultipleChoiceOrder();
         }
         
-        private String createPrompt(int type){
-            if(type==PromptTypes.STANDARD && questionType==QuestionType.ALGEBRA){
+        private String createPrompt(PromptType type){
+            if(type==PromptType.STANDARD && questionType==QuestionType.ALGEBRA){
                 int[] coefficients = new int[roots.length+1];
                 coefficients[0] = 1;
                 coefficients[1] = (-roots[0])+(-roots[1]);
@@ -94,7 +112,7 @@ public class Answer {
                 
                 return a;
             }
-            else if(type==PromptTypes.FACTORED && questionType==QuestionType.ALGEBRA){
+            else if(type==PromptType.FACTORED && questionType==QuestionType.ALGEBRA){
                 String a = "Identify the following expression's roots: ";
                 for(int b=0;b<roots.length;b++){
                     if(roots[b]<0){
@@ -109,7 +127,7 @@ public class Answer {
                 }
                 return a;
             }
-            else if(type==PromptTypes.ANGLES && questionType==QuestionType.TRIGONOMETRY){
+            else if(type==PromptType.ANGLES && questionType==QuestionType.TRIGONOMETRY){
                 String banger = "";
                 banger += "Angle A = "+triangle[visible[0]][1]+"\n";
                 banger += "Side a = "+triangle[visible[0]][0]+"\n";
@@ -135,14 +153,14 @@ public class Answer {
                 
                 return banger;
             }
-            else if(type==PromptTypes.SIDELENGTHS && questionType==QuestionType.TRIGONOMETRY){
+            else if(type==PromptType.SIDELENGTHS && questionType==QuestionType.TRIGONOMETRY){                
                 String banger = "";
                 banger += "Side a = "+Double.toString(triangle[visible[0]][0])+"\n";
                 banger += "Side b = "+Double.toString(triangle[visible[1]][0])+"\n";
                 Random a = new Random();
                 int v = a.nextInt(2);
                 while(v==visible[0] || v==visible[1]){
-                    v = a.nextInt(2);
+                   v  = a.nextInt(2);
                 }
                 banger += "Angle C = "+Double.toString(triangle[v][1])+"\n";
                 banger += "Find side length c.";
@@ -158,9 +176,9 @@ public class Answer {
             return null;
         }
         
-        private String createFullSolution(int promptType){
+        private String createFullSolution(PromptType promptType){
             String banger = "";
-            if(promptType==PromptTypes.FACTORED && questionType==QuestionType.ALGEBRA){
+            if(promptType==PromptType.FACTORED && questionType==QuestionType.ALGEBRA){
                 for(int r:roots){
                     if(r>0){ // positive 
                         banger += "x - "+Math.abs(r)+" = 0";
@@ -175,14 +193,14 @@ public class Answer {
                 
                 return banger;
             }
-            else if(promptType==PromptTypes.STANDARD && questionType==QuestionType.ALGEBRA){
+            else if(promptType==PromptType.STANDARD && questionType==QuestionType.ALGEBRA){
                 if(roots.length==3){ // cubic
                     // guess-and-check for roots
                     int[] check = {0, 1 , -1, 2, -2, 3, -3, 4, -4, 5, -5};
                     int ld=0;
                     String expression;
                     for(int c:check){
-                        expression = createPrompt(PromptTypes.STANDARD);
+                        expression = createPrompt(PromptType.STANDARD);
                         Calculator evaluation = new Calculator();
                         evaluation.storeVariable("x", c);
                         banger += "x = "+c+"\n";
@@ -223,10 +241,10 @@ public class Answer {
                 
                 return banger;
             }
-            else if(promptType==PromptTypes.ANGLES && questionType==QuestionType.TRIGONOMETRY){
+            else if(promptType==PromptType.ANGLES && questionType==QuestionType.TRIGONOMETRY){
                 // nothing to bang
             }
-            else if(promptType==PromptTypes.SIDELENGTHS && questionType==QuestionType.TRIGONOMETRY){
+            else if(promptType==PromptType.SIDELENGTHS && questionType==QuestionType.TRIGONOMETRY){
                 // nothing to bang
             }
             return null;

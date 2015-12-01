@@ -5,10 +5,12 @@
  */
 package mathgame.game;
 
+import java.util.Arrays;
 import mathgame.mediator.MathGameMediator;
 import mathgame.questions.Answer;
 import mathgame.util.calculator.Calculator;
 import mathgame.util.ReschedulableTimer;
+import mathgame.questions.Answer.PromptType;
 import java.util.TimerTask;
 
 /**
@@ -21,6 +23,7 @@ public class Game {
     private static final String TIME_CURVE_FUNCTION = "100 * (0.95^(%d - 50) + 10)";
     private static final long COUNTDOWN_TICK_UNIT = 100;
     
+    private Answer currentQuestion;
     private MathGameMediator mediator;
     private GameMode mode;
     private ReschedulableTimer questionTimer;
@@ -77,6 +80,8 @@ public class Game {
     }
     
     private void endQuestion(boolean isAnswerCorrect) {
+        isAnswerCorrect = false;
+        
         if (isAnswerCorrect && timeLeft > 0) {
             this.health += 10;
         } else {
@@ -103,11 +108,17 @@ public class Game {
     private void askQuestion() {
         System.out.println("new question");
         this.questionNumber++;
-//        generate question
-//        notify mediator
-//      pick random value from gameMode.allowedQuestionTypes
-//        mediator.questionAsked();
 
+        PromptType[] allowedQuestionTypes = this.mode.allowedQuestionTypes;
+        int random = (int) (Math.random() * allowedQuestionTypes.length);
+        this.currentQuestion = new Answer(this.mode.questionType, allowedQuestionTypes[random]);
+        mediator.questionAsked(this.currentQuestion);
+        
+        // TODO: remove when done
+        System.out.println(this.currentQuestion.getPrompt());
+        System.out.println(this.currentQuestion.getSolution());
+        System.out.println(Arrays.toString(this.currentQuestion.getMultipleChoiceAnswers()));
+        System.out.println(this.currentQuestion.getCorrectAnswerIndex());
         
         String exp = String.format(TIME_CURVE_FUNCTION, this.questionNumber);
         this.timeLeft = (long) Double.parseDouble(Calculator.eval(exp, false));

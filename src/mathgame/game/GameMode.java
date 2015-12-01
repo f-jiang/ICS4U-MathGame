@@ -6,20 +6,22 @@
 package mathgame.game;
 
 import mathgame.questions.QuestionType;
+import mathgame.questions.Answer.PromptType;
 
 /**
  *
  * @author feilan
  */
 public enum GameMode {
-    //TODO add allowed question types when enum complete
-    ALGEBRA(),
-    TRIGONOMETRY(),
-    INACTIVE();
+    ALGEBRA(QuestionType.ALGEBRA, PromptType.ANGLES, PromptType.SIDELENGTHS),
+    TRIGONOMETRY(QuestionType.TRIGONOMETRY, PromptType.FACTORED, PromptType.STANDARD),
+    INACTIVE(null);
     
-    public final QuestionType[] allowedQuestionTypes;
+    public final PromptType[] allowedQuestionTypes;
+    public final QuestionType questionType;
     
-    GameMode(QuestionType... allowed) {
+    GameMode(QuestionType type, PromptType... allowed) {
         this.allowedQuestionTypes = allowed;
+        this.questionType = type;
     }
 }

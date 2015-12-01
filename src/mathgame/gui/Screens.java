@@ -5,22 +5,18 @@
  */
 package mathgame.gui;
 
-import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import java.awt.CardLayout;
 import java.awt.event.KeyEvent;
+import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 import mathgame.game.GameMode;
 import mathgame.questions.Answer;
 import mathgame.util.calculator.Calculator;
 import mathgame.mediator.MathGameMediator;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.DefaultXYDataset;
 
 /**
  *
@@ -35,6 +31,7 @@ public class Screens extends javax.swing.JFrame {
     public Screens(MathGameMediator mediator) {        
         this.mediator = mediator;
         
+        // TODO: pick a nicer look and feel
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -47,19 +44,18 @@ public class Screens extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Screens.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Screens.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Screens.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Screens.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>                
         
+        //</editor-fold>
+        
         initComponents();
                 
+        answerContentGridLayout = new GridLayout(1, 1);
+        answerContent.setLayout(answerContentGridLayout);
+        
         answerTextField = new JTextField();
         answerTextField.setToolTipText("Answer here");
         answerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -80,7 +76,7 @@ public class Screens extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jDialog1 = new javax.swing.JDialog();
+        scoreDialog = new javax.swing.JDialog();
         scoreLabel = new javax.swing.JLabel();
         returnButton = new javax.swing.JButton();
         screens = new javax.swing.JPanel();
@@ -94,17 +90,20 @@ public class Screens extends javax.swing.JFrame {
         filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         gameScreen = new javax.swing.JPanel();
         questionSplitPane = new javax.swing.JSplitPane();
-        questionContent = new javax.swing.JPanel();
         answerContent = new javax.swing.JPanel();
+        questionLabel = new javax.swing.JLabel();
         quitButton = new javax.swing.JButton();
         calculatorTextField = new javax.swing.JTextField();
 
-        jDialog1.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        scoreDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        scoreDialog.setMinimumSize(new java.awt.Dimension(200, 150));
+        scoreDialog.setName("scoreDialog"); // NOI18N
 
+        scoreLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         scoreLabel.setText("jLabel1");
         scoreLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        scoreLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jDialog1.getContentPane().add(scoreLabel, java.awt.BorderLayout.CENTER);
+        scoreLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        scoreDialog.getContentPane().add(scoreLabel, java.awt.BorderLayout.CENTER);
 
         returnButton.setText("Return to Main Menu");
         returnButton.addActionListener(new java.awt.event.ActionListener() {
@@ -112,9 +111,10 @@ public class Screens extends javax.swing.JFrame {
                 returnButtonActionPerformed(evt);
             }
         });
-        jDialog1.getContentPane().add(returnButton, java.awt.BorderLayout.PAGE_END);
+        scoreDialog.getContentPane().add(returnButton, java.awt.BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(500, 400));
 
         screens.setAutoscrolls(true);
         screens.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -213,11 +213,22 @@ public class Screens extends javax.swing.JFrame {
         questionSplitPane.setToolTipText("");
         questionSplitPane.setEnabled(false);
 
-        questionContent.setLayout(new java.awt.BorderLayout());
-        questionSplitPane.setLeftComponent(questionContent);
+        javax.swing.GroupLayout answerContentLayout = new javax.swing.GroupLayout(answerContent);
+        answerContent.setLayout(answerContentLayout);
+        answerContentLayout.setHorizontalGroup(
+            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        answerContentLayout.setVerticalGroup(
+            answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 17, Short.MAX_VALUE)
+        );
 
-        answerContent.setLayout(new java.awt.GridLayout(1, 0));
         questionSplitPane.setRightComponent(answerContent);
+
+        questionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        questionLabel.setText("jLabel2");
+        questionSplitPane.setLeftComponent(questionLabel);
 
         gameScreen.add(questionSplitPane, java.awt.BorderLayout.CENTER);
 
@@ -230,11 +241,6 @@ public class Screens extends javax.swing.JFrame {
         gameScreen.add(quitButton, java.awt.BorderLayout.PAGE_END);
 
         calculatorTextField.setToolTipText("Calculator");
-        calculatorTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                calculatorTextFieldActionPerformed(evt);
-            }
-        });
         calculatorTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 calculatorTextFieldKeyTyped(evt);
@@ -293,52 +299,66 @@ public class Screens extends javax.swing.JFrame {
     }//GEN-LAST:event_calculatorTextFieldKeyTyped
 
     private void trigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trigButtonActionPerformed
-        mediator.gameStarted(GameMode.ALGEBRA);
+        mediator.gameStarted(GameMode.TRIGONOMETRY);
         showGameScreen();
     }//GEN-LAST:event_trigButtonActionPerformed
 
     private void returnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnButtonActionPerformed
         this.setEnabled(true);
-        jDialog1.setVisible(false);
+        scoreDialog.setVisible(false);
         showStartScreen();
     }//GEN-LAST:event_returnButtonActionPerformed
-
-    private void calculatorTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculatorTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_calculatorTextFieldActionPerformed
+    
+    //TODO: implement health bar
+    //TODO: implement timer display
     
     private void answerTextFieldKeyTyped(KeyEvent evt) {
         JTextField textField = (JTextField) evt.getSource();
         String answer = textField.getText();
         
         if (evt.getKeyChar() == KeyEvent.VK_ENTER && !answer.equals("")) {        
-            mediator.questionAnswered(answer);
+            mediator.questionAnswered(answer);            
         }
     }
     
-    public void loadQuestion(Answer question) {
-        // show prompt in label
-        // if necessary, add graph or diagram
-        /* to load graph, we need to know:
-            -range of x and y-values to display
-            -axis names (e.g. is the y-axis called "y" or "f(x)"?)
-            -the function equation
-         */       
-        
-        // load multiple choice answers, or load textfield depending on question
-        
+    private void answerButtonActionPerformed(ActionEvent evt) {
+        JButton button = (JButton) evt.getSource();
+        mediator.questionAnswered(button.getText());
+    }
+    
+    public void loadQuestion(Answer question) {        
+        answerContent.removeAll();
+        questionLabel.setText(question.getPrompt()); // TODO: or is it getSolution()?
+
+        if (question.isMultipleChoice()) {            
+            int numButtons = question.getMultipleChoiceAnswers().length;
+            answerContentGridLayout.setRows(numButtons);
+            
+            for (String answer : question.getMultipleChoiceAnswers()) {
+                answerButton = new JButton();
+                answerButton.setText(answer);
+                answerButton.addActionListener((ActionEvent evt) -> {
+                    answerButtonActionPerformed(evt);
+                });
+                answerContent.add(answerButton);
+            }
+        } else {
+            answerContentGridLayout.setRows(1);
+            answerContent.add(answerTextField);            
+        }
+        this.revalidate();
     }
     
     public void endGame() {
-        scoreLabel.setText("Your score: ");
+        scoreLabel.setText("Your score: "); // TODO: show an actual score
         this.setEnabled(false);
-        jDialog1.pack();
-        jDialog1.setVisible(true);        
+        scoreDialog.setVisible(true);        
     }
     
     private void showGameScreen() {
         CardLayout card = (CardLayout) screens.getLayout();
         card.show(screens, "gameScreen");
+        calculatorTextField.setText("");
     }
     
     private void showStartScreen() {
@@ -366,7 +386,9 @@ public class Screens extends javax.swing.JFrame {
     private MathGameMediator mediator;
     private JLabel promptLabel;
 //    private ChartPanel promptChartPanel;
+    private JButton answerButton;
     private JTextField answerTextField;
+    private GridLayout answerContentGridLayout;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton algebraButton;
@@ -377,11 +399,11 @@ public class Screens extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
     private javax.swing.JPanel gameScreen;
-    private javax.swing.JDialog jDialog1;
-    private javax.swing.JPanel questionContent;
+    private javax.swing.JLabel questionLabel;
     private javax.swing.JSplitPane questionSplitPane;
     private javax.swing.JButton quitButton;
     private javax.swing.JButton returnButton;
+    private javax.swing.JDialog scoreDialog;
     private javax.swing.JLabel scoreLabel;
     private javax.swing.JPanel screens;
     private javax.swing.JPanel startScreen;
