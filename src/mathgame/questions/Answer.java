@@ -142,7 +142,13 @@ public class Answer {
                 while(v==visible[0] || v==visible[1]){
                     v = a.nextInt(2);
                 }
-                banger += "Angle c = "+Double.toString(triangle[v][1]);
+                banger += "Angle C = "+Double.toString(triangle[v][1])+"\n";
+                banger += "Find side length c.";
+                
+                multipleChoiceAnswers[0] = Double.toString(triangle[v][0]);
+                for(int i=1;i<4;i++){
+                    multipleChoiceAnswers[i] = Integer.toString(a.nextInt(24)+1);
+                }
             }
             return null;
         }
