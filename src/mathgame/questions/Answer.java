@@ -98,7 +98,7 @@ public class Answer {
                     }
                 }
                 
-                String a = "Identify the following expression's roots: ";
+                String a = "Identify one of the following expression's roots: ";
                 for(int c=0;c<coefficients.length;c++){
                     if(c>0){
                         if(coefficients[c]<0){
@@ -114,7 +114,7 @@ public class Answer {
                 return a;
             }
             else if(type==PromptType.FACTORED && questionType==QuestionType.ALGEBRA){
-                String a = "Identify the following expression's roots: ";
+                String a = "Identify one of the following expression's roots: ";
                 for(int b=0;b<roots.length;b++){
                     if(roots[b]<0){
                         a += "(x + "+Integer.toString(Math.abs(roots[b]))+")";
