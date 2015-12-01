@@ -110,15 +110,15 @@ public class Game {
         this.questionNumber++;
 
         PromptType[] allowedQuestionTypes = this.mode.allowedQuestionTypes;
-        int random = (int) (Math.random() * allowedQuestionTypes.length);
+        int random = (int) (Math.random() * (allowedQuestionTypes.length - 1));
         this.currentQuestion = new Answer(this.mode.questionType, allowedQuestionTypes[random]);
         mediator.questionAsked(this.currentQuestion);
         
         // TODO: remove when done
-        System.out.println(this.currentQuestion.getPrompt());
-        System.out.println(this.currentQuestion.getSolution());
-        System.out.println(Arrays.toString(this.currentQuestion.getMultipleChoiceAnswers()));
-        System.out.println(this.currentQuestion.getCorrectAnswerIndex());
+//        System.out.println(this.currentQuestion.getPrompt());
+//        System.out.println(this.currentQuestion.getSolution());
+//        System.out.println(Arrays.toString(this.currentQuestion.getMultipleChoiceAnswers()));
+//        System.out.println(this.currentQuestion.getCorrectAnswerIndex());
         
         String exp = String.format(TIME_CURVE_FUNCTION, this.questionNumber);
         this.timeLeft = (long) Double.parseDouble(Calculator.eval(exp, false));

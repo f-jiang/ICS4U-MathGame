@@ -13,8 +13,8 @@ import mathgame.questions.Answer.PromptType;
  * @author feilan
  */
 public enum GameMode {
-    ALGEBRA(QuestionType.ALGEBRA, PromptType.ANGLES, PromptType.SIDELENGTHS),
-    TRIGONOMETRY(QuestionType.TRIGONOMETRY, PromptType.FACTORED, PromptType.STANDARD),
+    ALGEBRA(QuestionType.ALGEBRA, PromptType.FACTORED, PromptType.STANDARD),
+    TRIGONOMETRY(QuestionType.TRIGONOMETRY, PromptType.ANGLES, PromptType.SIDELENGTHS),
     INACTIVE(null);
     
     public final PromptType[] allowedQuestionTypes;
