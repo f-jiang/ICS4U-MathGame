@@ -6,7 +6,7 @@ import mathgame.util.calculator.Calculator;
 public class Answer {
     
         int[] roots;
-        int[][] triangle;
+        double[][] triangle;
         
         String prompt;
         String solution;
@@ -23,7 +23,7 @@ public class Answer {
         
         public Answer(QuestionType qType, int promptType){
             roots = new int[new Random().nextInt(1) + 1];
-            triangle = new int[3][2];
+            triangle = new double[3][2];
             
             questionType = qType;
             if(questionType==QuestionType.ALGEBRA){
@@ -31,12 +31,16 @@ public class Answer {
                     roots[i] = new Random().nextInt(10) - 5;
                 }
             }else if(questionType==QuestionType.TRIGONOMETRY){
-                for(int l=0;l<3;l++){
-                    // angle:
-                    
-                    // side length:
-                    
-                }
+                // side lengths: (first two created at random, hypotenuse by pyth. theorem)
+                Random a = new Random();
+                triangle[0][0] = (double) a.nextInt(24)+1;
+                triangle[1][0] = (double) a.nextInt(24)+1;
+                triangle[2][0] = Math.sqrt(Math.pow(triangle[0][0],2)+Math.pow(triangle[1][0],2));
+                
+                // angles:
+                triangle[2][1] = Math.PI / 2;
+                triangle[1][1] = Math.asin(triangle[0][0]/triangle[2][0]);
+                triangle[0][1] = Math.asin(triangle[1][0]/triangle[2][0]);
             }
             
             prompt = createPrompt(promptType);
