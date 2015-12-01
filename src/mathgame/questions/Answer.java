@@ -85,6 +85,8 @@ public class Answer {
         }
         
         private String createPrompt(PromptType type){
+            System.out.println(type+", "+questionType);
+            
             if(type==PromptType.STANDARD && questionType==QuestionType.ALGEBRA){
                 int[] coefficients = new int[roots.length+1];
                 coefficients[0] = 1;
@@ -125,6 +127,7 @@ public class Answer {
                         a = "x"+a;
                     }
                 }
+                
                 return a;
             }
             else if(type==PromptType.ANGLES && questionType==QuestionType.TRIGONOMETRY){
@@ -173,6 +176,7 @@ public class Answer {
                 
                 return banger;
             }
+            
             return null;
         }
         
