@@ -6,6 +6,7 @@
 package mathgame.gui;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.GridLayout;
 import java.awt.CardLayout;
 import java.awt.event.KeyEvent;
@@ -64,6 +65,8 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
                 answerTextFieldKeyTyped(evt);
             }
         });
+        
+        healthProgressBar.setMaximum(mediator.getStartingHealth());
     }
     
     /**
@@ -77,35 +80,34 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
         java.awt.GridBagConstraints gridBagConstraints;
 
         scoreDialog = new javax.swing.JDialog();
-        scoreLabel = new javax.swing.JLabel();
+        finalScoreLabel = new javax.swing.JLabel();
         returnButton = new javax.swing.JButton();
         screens = new javax.swing.JPanel();
         startScreen = new javax.swing.JPanel();
         algebraButton = new javax.swing.JButton();
-        algebraStatsLabel = new javax.swing.JLabel();
         trigButton = new javax.swing.JButton();
-        eraseStatsButton = new javax.swing.JButton();
-        trigStatsLabel = new javax.swing.JLabel();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        jLabel1 = new javax.swing.JLabel();
         gameScreen = new javax.swing.JPanel();
         questionSplitPane = new javax.swing.JSplitPane();
         answerContent = new javax.swing.JPanel();
         questionLabel = new javax.swing.JLabel();
         quitButton = new javax.swing.JButton();
         calculatorTextField = new javax.swing.JTextField();
-        timeProgressBar = new javax.swing.JProgressBar();
         healthProgressBar = new javax.swing.JProgressBar();
+        timeLeftLabel = new javax.swing.JLabel();
+        scoreLabel = new javax.swing.JLabel();
 
         scoreDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        scoreDialog.setTitle("Game Over");
         scoreDialog.setMinimumSize(new java.awt.Dimension(200, 150));
         scoreDialog.setName("scoreDialog"); // NOI18N
 
-        scoreLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        scoreLabel.setText("jLabel1");
-        scoreLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        scoreLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        scoreDialog.getContentPane().add(scoreLabel, java.awt.BorderLayout.CENTER);
+        finalScoreLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        finalScoreLabel.setText("jLabel1");
+        finalScoreLabel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        finalScoreLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        scoreDialog.getContentPane().add(finalScoreLabel, java.awt.BorderLayout.CENTER);
 
         returnButton.setText("Return to Main Menu");
         returnButton.addActionListener(new java.awt.event.ActionListener() {
@@ -134,23 +136,11 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        startScreen.add(algebraButton, gridBagConstraints);
-
-        algebraStatsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        algebraStatsLabel.setText("jLabel1");
-        algebraStatsLabel.setFocusable(false);
-        algebraStatsLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
-        startScreen.add(algebraStatsLabel, gridBagConstraints);
+        gridBagConstraints.weighty = 0.1;
+        startScreen.add(algebraButton, gridBagConstraints);
 
         trigButton.setText("Trigonometry");
         trigButton.setPreferredSize(new java.awt.Dimension(100, 31));
@@ -161,50 +151,28 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        startScreen.add(trigButton, gridBagConstraints);
-
-        eraseStatsButton.setText("Erase Stats");
-        eraseStatsButton.setPreferredSize(new java.awt.Dimension(100, 31));
-        eraseStatsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eraseStatsButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
-        startScreen.add(eraseStatsButton, gridBagConstraints);
-
-        trigStatsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        trigStatsLabel.setText("jLabel3");
-        trigStatsLabel.setFocusable(false);
-        trigStatsLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 0.3;
-        startScreen.add(trigStatsLabel, gridBagConstraints);
+        gridBagConstraints.weighty = 0.1;
+        startScreen.add(trigButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.weighty = 0.1;
         startScreen.add(filler11, gridBagConstraints);
+
+        jLabel1.setFont(new java.awt.Font("Noto Sans", 0, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Math Binge");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
-        startScreen.add(filler12, gridBagConstraints);
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.1;
+        startScreen.add(jLabel1, gridBagConstraints);
 
         screens.add(startScreen, "startScreen");
 
@@ -223,19 +191,20 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
         );
         answerContentLayout.setVerticalGroup(
             answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 32, Short.MAX_VALUE)
+            .addGap(0, 46, Short.MAX_VALUE)
         );
 
         questionSplitPane.setRightComponent(answerContent);
 
         questionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         questionLabel.setText("jLabel2");
+        questionLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         questionSplitPane.setLeftComponent(questionLabel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.9;
         gameScreen.add(questionSplitPane, gridBagConstraints);
@@ -249,7 +218,6 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.15;
         gridBagConstraints.weighty = 0.1;
@@ -262,28 +230,41 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weighty = 0.05;
+        gridBagConstraints.weightx = 0.85;
+        gridBagConstraints.weighty = 0.1;
         gameScreen.add(calculatorTextField, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.85;
-        gridBagConstraints.weighty = 0.1;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        gameScreen.add(timeProgressBar, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.85;
+        gridBagConstraints.weightx = 0.6;
         gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         gameScreen.add(healthProgressBar, gridBagConstraints);
+
+        timeLeftLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        timeLeftLabel.setText("jLabel1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.15;
+        gridBagConstraints.weighty = 0.1;
+        gameScreen.add(timeLeftLabel, gridBagConstraints);
+
+        scoreLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        scoreLabel.setText("jLabel1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.25;
+        gridBagConstraints.weighty = 0.1;
+        gameScreen.add(scoreLabel, gridBagConstraints);
 
         screens.add(gameScreen, "gameScreen");
 
@@ -295,7 +276,7 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(screens, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+            .addComponent(screens, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -305,10 +286,6 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
         mediator.gameStarted(GameMode.ALGEBRA);
         showGameScreen();
     }//GEN-LAST:event_algebraButtonActionPerformed
-
-    private void eraseStatsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eraseStatsButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_eraseStatsButtonActionPerformed
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
         mediator.gameQuit();
@@ -338,43 +315,24 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
     //TODO: implement health bar
     //TODO: implement timer display
     
-    /*@Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress".equals(evt.getPropertyName())) {
-            int progress = (Integer) evt.getNewValue();            
-            timeProgressBar.setValue(progress);
-        }        
-    }*/
-    
     private void answerTextFieldKeyTyped(KeyEvent evt) {
         JTextField textField = (JTextField) evt.getSource();
         String answer = textField.getText();
         
         if (evt.getKeyChar() == KeyEvent.VK_ENTER && !answer.equals("")) {        
-//            timeTask.cancel(true);
             mediator.questionAnswered(answer);            
         }
     }
     
     private void answerButtonActionPerformed(ActionEvent evt) {
         JButton button = (JButton) evt.getSource();
-//        timeTask.cancel(true);
         mediator.questionAnswered(button.getText());
     }
     
     public void loadQuestion(Answer question) {        
         answerContent.removeAll();
         questionLabel.setText(question.getPrompt());        
-        
-        timeProgressBar.setMaximum((int) mediator.getInitialTimeForQuestion());
-        timeProgressBar.setValue(timeProgressBar.getMaximum());
-        
-//        timeTask = new TimeTask();
-//        timeTask.addPropertyChangeListener(this);
-//        timeTask.execute();            
-        
-
-
+                
         if (question.isMultipleChoice()) {            
             int numButtons = question.getMultipleChoiceAnswers().length;
             answerContentGridLayout.setRows(numButtons);
@@ -397,84 +355,53 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
     }
     
     public void endGame() {
-        scoreLabel.setText("Your score: "); // TODO: show an actual score
+        finalScoreLabel.setText("Your score: " + mediator.getScore());
         this.setEnabled(false);
-        scoreDialog.setVisible(true);        
+        scoreDialog.setVisible(true);         
+    }
+    
+    public void updateHealthBar() {
+        healthProgressBar.setValue(mediator.getCurrentHealth());
+    }
+    
+    public void updateTimeLabel() {
+        int time = (int) mediator.getTimeLeftForQuestion();
+        timeLeftLabel.setText(String.valueOf(time / 1000));
+    }
+    
+    public void updateScoreLabel() {
+        int score = mediator.getScore();
+        scoreLabel.setText("Score: " + score);
     }
     
     private void showGameScreen() {        
         CardLayout card = (CardLayout) screens.getLayout();
         card.show(screens, "gameScreen");
         calculatorTextField.setText("");
+        scoreLabel.setText("Score: 0");
+        healthProgressBar.setValue(healthProgressBar.getMaximum());
     }
     
     private void showStartScreen() {
         CardLayout card = (CardLayout) screens.getLayout();
-        card.show(screens, "startScreen");                
+        card.show(screens, "startScreen");                        
     }
 
-    /*private XYDataset createDataset(String function, double xmin, double xmax) {
-        final double tickValue = 0.1;
-        int numData = (int) Math.round((xmax - xmin) / tickValue);
-        double[][] data = new double[2][numData];
-        DefaultXYDataset dataset = new DefaultXYDataset();
-        
-        for (int i = 0; i < numData; i++, xmin += tickValue) {
-            data[0][i] = xmin;            
-            Calculator.storeVariable("x", xmin);
-            data[1][i] = Double.parseDouble(Calculator.eval(function, false)); //null for small values
-        }
-        
-        dataset.addSeries(function, data);
-        
-        return dataset;
-    }*/
-    
-    /*private class TimeTask extends SwingWorker<Void, Void> {        
-        @Override
-        public Void doInBackground() {                        
-            int timeLeft = (int) mediator.getInitialTimeForQuestion();
-            
-            
-            while (timeLeft > 0) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                
-                timeLeft = (int) mediator.getTimeLeftForQuestion();
-                setProgress(timeLeft);                
-            };                       
-            
-            return null;
-        }
-        
-        @Override
-        public void done() {
-            System.out.println("nigga nigga");
-        }
-    }*/
-    
     private MathGameMediator mediator;
     private JLabel promptLabel;
     private JButton answerButton;
     private JTextField answerTextField;
     private GridLayout answerContentGridLayout;
-    private Timer timer;
-//    private TimeTask timeTask;
-//    private Task healthTask;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton algebraButton;
-    private javax.swing.JLabel algebraStatsLabel;
     private javax.swing.JPanel answerContent;
     private javax.swing.JTextField calculatorTextField;
-    private javax.swing.JButton eraseStatsButton;
     private javax.swing.Box.Filler filler11;
-    private javax.swing.Box.Filler filler12;
+    private javax.swing.JLabel finalScoreLabel;
     private javax.swing.JPanel gameScreen;
     private javax.swing.JProgressBar healthProgressBar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel questionLabel;
     private javax.swing.JSplitPane questionSplitPane;
     private javax.swing.JButton quitButton;
@@ -483,8 +410,7 @@ public class Screens extends javax.swing.JFrame /*implements PropertyChangeListe
     private javax.swing.JLabel scoreLabel;
     private javax.swing.JPanel screens;
     private javax.swing.JPanel startScreen;
-    private javax.swing.JProgressBar timeProgressBar;
+    private javax.swing.JLabel timeLeftLabel;
     private javax.swing.JButton trigButton;
-    private javax.swing.JLabel trigStatsLabel;
     // End of variables declaration//GEN-END:variables
 }

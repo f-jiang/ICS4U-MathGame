@@ -1,6 +1,7 @@
 package mathgame.questions;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 import mathgame.util.calculator.Calculator;
 
@@ -18,6 +19,23 @@ public class Answer {
         boolean isMultipleChoice;
         
         QuestionType questionType;
+
+        public ArrayList<String> getCorrectAnswers() {
+            ArrayList<String> answers = new ArrayList<>();
+            if (isMultipleChoice) {
+                answers.add(multipleChoiceAnswers[correctAnswerIndex]);                
+            } else {
+                for (int root : roots) {
+                    answers.add(String.valueOf(root));
+                }
+            }
+            
+            return answers;
+        }
+        
+        public int[] getRoots() {
+            return roots;
+        }
         
         public String getPrompt() {
             return prompt;
@@ -79,9 +97,13 @@ public class Answer {
                 }
             }
             
-            prompt = createPrompt(promptType);
+            prompt = "<html>";
+            prompt += createPrompt(promptType);
+            prompt = prompt.replaceAll("%n", "<br>");
             solution = createFullSolution(promptType);
             randomiseMultipleChoiceOrder();
+            
+            
         }
         
         private String createPrompt(PromptType type){
@@ -98,7 +120,7 @@ public class Answer {
                     }
                 }
                 
-                String a = "Identify one of the following expression's roots: ";
+                String a = "Identify one of the following expression's roots:%n";
                 for(int c=0;c<coefficients.length;c++){
                     if(c>0){
                         if(coefficients[c]<0){
@@ -114,7 +136,7 @@ public class Answer {
                 return a;
             }
             else if(type==PromptType.FACTORED && questionType==QuestionType.ALGEBRA){
-                String a = "Identify one of the following expression's roots: ";
+                String a = "Identify one of the following expression's roots:%n";
                 for(int b=0;b<roots.length;b++){
                     if(roots[b]<0){
                         a += "(x + "+Integer.toString(Math.abs(roots[b]))+")";
@@ -131,19 +153,19 @@ public class Answer {
             }
             else if(type==PromptType.ANGLES && questionType==QuestionType.TRIGONOMETRY){
                 String banger = "";
-                banger += "Angle A = "+triangle[visible[0]][1]+"\n";
-                banger += "Side a = "+triangle[visible[0]][0]+"\n";
+                banger += "Angle A = "+triangle[visible[0]][1]+"%n";
+                banger += "Side a = "+triangle[visible[0]][0]+"%n";
                 Random b = new Random();
                 int v1 = b.nextInt(3);
                 while(v1==visible[0]){
                     v1 = b.nextInt(3);
                 }
-                banger += "Side b = "+triangle[v1][0]+"\n";
+                banger += "Side b = "+triangle[v1][0]+"%n";
                 int v2 = b.nextInt(3);
                 while(v2==visible[0] || v2==v1){
                     v2 = b.nextInt(3);
                 }
-                banger += "Side c = "+triangle[v2][0]+"\n";
+                banger += "Side c = "+triangle[v2][0]+"%n";
                 banger += "Find angles B and C.";
                 
                 multipleChoiceAnswers[0] = Double.toString(triangle[v1][1])+", "+Double.toString(triangle[v2][1]);
@@ -157,14 +179,14 @@ public class Answer {
             }
             else if(type==PromptType.SIDELENGTHS && questionType==QuestionType.TRIGONOMETRY){                
                 String banger = "";
-                banger += "Side a = "+Double.toString(triangle[visible[0]][0])+"\n";
-                banger += "Side b = "+Double.toString(triangle[visible[1]][0])+"\n";
+                banger += "Side a = "+Double.toString(triangle[visible[0]][0])+"%n";
+                banger += "Side b = "+Double.toString(triangle[visible[1]][0])+"%n";
                 Random a = new Random();
                 int v = a.nextInt(3);
                 while(v==visible[0] || v==visible[1]){
                    v  = a.nextInt(3);
                 }
-                banger += "Angle C = "+Double.toString(triangle[v][1])+"\n";
+                banger += "Angle C = "+Double.toString(triangle[v][1])+"%n";
                 banger += "Find side length c.";
                 
                 multipleChoiceAnswers[0] = Double.toString(triangle[v][0]);

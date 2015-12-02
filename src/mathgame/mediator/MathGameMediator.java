@@ -8,7 +8,6 @@ package mathgame.mediator;
 import mathgame.questions.Answer;
 import mathgame.game.Game;
 import mathgame.game.GameMode;
-import mathgame.game.GameStats;
 import mathgame.gui.Screens;
 
 /**
@@ -18,15 +17,10 @@ import mathgame.gui.Screens;
 public class MathGameMediator {
     
     private Game game;
-    private GameStats gameStats;
     private Screens screens;
     
     public void setGame(Game game) {
         this.game = game;
-    }
-
-    public void setGameStats(GameStats gameStats) {
-        this.gameStats = gameStats;
     }
 
     public void setScreens(Screens screens) {
@@ -43,6 +37,18 @@ public class MathGameMediator {
    
     public void gameEnded() {
         screens.endGame();
+    }
+    
+    public int getStartingHealth() {
+        return Game.STARTING_HEALTH;
+    }
+    
+    public int getCurrentHealth() {
+        return game.getHealth();
+    }
+    
+    public int getScore() {
+        return game.getScore();
     }
     
     public long getTimeLeftForQuestion() {
@@ -71,6 +77,18 @@ public class MathGameMediator {
     
     public void statsInit() {
         
+    }
+    
+    public void updateHealthBar() {
+        screens.updateHealthBar();
+    }
+    
+    public void updateTimeLabel() {
+        screens.updateTimeLabel();
+    }
+    
+    public void updateScoreLabel() {
+        screens.updateScoreLabel();
     }
     
 }

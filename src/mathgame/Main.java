@@ -8,7 +8,6 @@ package mathgame;
 import mathgame.mediator.MathGameMediator;
 import mathgame.gui.Screens;
 import mathgame.game.Game;
-import mathgame.game.GameStats;
 
 /**
  *
@@ -23,11 +22,9 @@ public class Main {
         MathGameMediator mediator = new MathGameMediator();
         Screens screens = new Screens(mediator);
         Game game = new Game(mediator);
-        GameStats gameStats = new GameStats(mediator);
         
         mediator.setGame(game);        
         mediator.setScreens(screens);
-        mediator.setGameStats(gameStats);
                 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {

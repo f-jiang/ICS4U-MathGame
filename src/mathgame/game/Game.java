@@ -5,7 +5,7 @@
  */
 package mathgame.game;
 
-import java.util.Arrays;
+import java.util.List;
 import mathgame.mediator.MathGameMediator;
 import mathgame.questions.Answer;
 import mathgame.util.calculator.Calculator;
@@ -19,9 +19,9 @@ import java.util.TimerTask;
  */
 public class Game {
 
-    private static final int STARTING_HEALTH = 100;
-    private static final String TIME_CURVE_FUNCTION = "100 * (0.95^(%d - 50) + 10)";
-    private static final long COUNTDOWN_TICK_UNIT = 100;
+    public static final int STARTING_HEALTH = 100;
+    public static final String TIME_CURVE_FUNCTION = "1000 * (0.96^(%d - 50) + 5)";
+    public static final long COUNTDOWN_TICK_UNIT = 100;
     
     private Answer currentQuestion;
     private MathGameMediator mediator;
@@ -45,7 +45,8 @@ public class Game {
         @Override
         public void run() {
 //            System.out.format("%d ms remaining%n", timeLeft);
-            timeLeft -= COUNTDOWN_TICK_UNIT;            
+            timeLeft -= COUNTDOWN_TICK_UNIT;
+            mediator.updateTimeLabel();
         }
     }
     
@@ -53,12 +54,21 @@ public class Game {
         this.mediator = mediator;        
         this.mode = GameMode.INACTIVE;        
         this.health = 0;
+        this.score = 0;
         this.questionNumber = 0;
         this.timeLeft = 0;
     }    
 
+    public int getHealth() {
+        return this.health;
+    }
+    
     public long getInitialTime() {
         return this.initialTime;
+    }
+    
+    public int getScore() {
+        return this.score;
     }
     
     public long getTimeLeft() {
@@ -71,6 +81,7 @@ public class Game {
         this.questionTimer = new ReschedulableTimer();
         this.countdownTimer = new ReschedulableTimer();
         this.health = STARTING_HEALTH;
+        this.score = 0;
         this.questionNumber = 0;
         askQuestion();
     }
@@ -82,23 +93,37 @@ public class Game {
         this.mode = GameMode.INACTIVE;        
     }
 
-    public void answerQuestion(String answer) {
-        // TODO: evaluate answer and time left
+    public void answerQuestion(String answer) {        
+        boolean isCorrect;
+        if (this.currentQuestion.isMultipleChoice()) {
+//            System.out.println("Correct answer: " + this.currentQuestion.getCorrectAnswers().get(0));
+            isCorrect = (answer.equals(this.currentQuestion.getCorrectAnswers().get(0)));
+        } else {
+//            System.out.println("Correct answer(s): " + this.currentQuestion.getCorrectAnswers().toString());
+            isCorrect = this.currentQuestion.getCorrectAnswers().contains(answer);
+        }
         
-        endQuestion(Math.random() > 0.5);
+//        System.out.println("Your answer: " + answer);
+        
+        endQuestion(isCorrect);
     }
     
     private void endQuestion(boolean isAnswerCorrect) {
-        isAnswerCorrect = false;
-        
         if (isAnswerCorrect && timeLeft > 0) {
+            System.out.println("Right answer");
             this.health += 10;
+            this.score += 0.001*timeLeft + 1;
         } else {
-            System.out.println("time up");
+            System.out.println("Wrong answer");
             this.health -= 20;
         }
         
-        // update stats
+        if (this.health > STARTING_HEALTH) {
+            this.health = STARTING_HEALTH;
+        }
+        
+        this.mediator.updateHealthBar();
+        this.mediator.updateScoreLabel();
         
         if (this.health > 0) {
             askQuestion();
@@ -118,11 +143,12 @@ public class Game {
         System.out.println("new question");
         this.questionNumber++;
         
-        // TODO: remove when done
-//        System.out.println(this.currentQuestion.getPrompt());
-//        System.out.println(this.currentQuestion.getSolution());
-//        System.out.println(Arrays.toString(this.currentQuestion.getMultipleChoiceAnswers()));
-//        System.out.println(this.currentQuestion.getCorrectAnswerIndex());
+        PromptType[] allowedQuestionTypes = this.mode.allowedQuestionTypes;
+        int random = (int) (Math.random() * (allowedQuestionTypes.length - 1));
+        this.currentQuestion = new Answer(this.mode.questionType, allowedQuestionTypes[random]);
+        mediator.questionAsked(this.currentQuestion);               
+        
+        System.out.println(currentQuestion.getCorrectAnswers().toString());
         
         String exp = String.format(TIME_CURVE_FUNCTION, this.questionNumber);
         this.initialTime = this.timeLeft = (long) Double.parseDouble(Calculator.eval(exp, false));
@@ -135,12 +161,7 @@ public class Game {
             this.countdownTimer.reschedule(0, COUNTDOWN_TICK_UNIT);
         }
             
-        System.out.format("next question scheduled to appear in %d ms%n", this.initialTime);
-        
-        PromptType[] allowedQuestionTypes = this.mode.allowedQuestionTypes;
-        int random = (int) (Math.random() * (allowedQuestionTypes.length - 1));
-        this.currentQuestion = new Answer(this.mode.questionType, allowedQuestionTypes[random]);
-        mediator.questionAsked(this.currentQuestion);        
+        System.out.format("next question scheduled to appear in %d ms%n", this.initialTime); 
     }
     
 }
