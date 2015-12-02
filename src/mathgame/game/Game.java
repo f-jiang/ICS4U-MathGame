@@ -31,7 +31,8 @@ public class Game {
     private int health;
     private int score;
     private int questionNumber;
-    private long timeLeft;    
+    private long initialTime;
+    private long timeLeft;
     
     private class NextQuestionTask extends TimerTask {        
         @Override
@@ -55,8 +56,16 @@ public class Game {
         this.questionNumber = 0;
         this.timeLeft = 0;
     }    
+
+    public long getInitialTime() {
+        return this.initialTime;
+    }
     
-    public void play(GameMode gameMode) {
+    public long getTimeLeft() {
+        return this.timeLeft;
+    }
+    
+    public void play(GameMode gameMode) {                
         System.out.println("new game");
         this.mode = gameMode;
         this.questionTimer = new ReschedulableTimer();
@@ -74,7 +83,7 @@ public class Game {
     }
 
     public void answerQuestion(String answer) {
-        // evalute answer and time left
+        // TODO: evaluate answer and time left
         
         endQuestion(Math.random() > 0.5);
     }
@@ -108,11 +117,6 @@ public class Game {
     private void askQuestion() {
         System.out.println("new question");
         this.questionNumber++;
-
-        PromptType[] allowedQuestionTypes = this.mode.allowedQuestionTypes;
-        int random = (int) (Math.random() * (allowedQuestionTypes.length - 1));
-        this.currentQuestion = new Answer(this.mode.questionType, allowedQuestionTypes[random]);
-        mediator.questionAsked(this.currentQuestion);
         
         // TODO: remove when done
 //        System.out.println(this.currentQuestion.getPrompt());
@@ -121,17 +125,22 @@ public class Game {
 //        System.out.println(this.currentQuestion.getCorrectAnswerIndex());
         
         String exp = String.format(TIME_CURVE_FUNCTION, this.questionNumber);
-        this.timeLeft = (long) Double.parseDouble(Calculator.eval(exp, false));
+        this.initialTime = this.timeLeft = (long) Double.parseDouble(Calculator.eval(exp, false));
         
         if (this.questionNumber == 1) {            
-            this.questionTimer.schedule(new NextQuestionTask(), this.timeLeft);
+            this.questionTimer.schedule(new NextQuestionTask(), this.initialTime);
             this.countdownTimer.schedule(new CountdownTask(), 0, COUNTDOWN_TICK_UNIT);
         } else {
-            this.questionTimer.reschedule(this.timeLeft);
+            this.questionTimer.reschedule(this.initialTime);
             this.countdownTimer.reschedule(0, COUNTDOWN_TICK_UNIT);
         }
             
-        System.out.format("next question scheduled to appear in %d ms%n", this.timeLeft);
+        System.out.format("next question scheduled to appear in %d ms%n", this.initialTime);
+        
+        PromptType[] allowedQuestionTypes = this.mode.allowedQuestionTypes;
+        int random = (int) (Math.random() * (allowedQuestionTypes.length - 1));
+        this.currentQuestion = new Answer(this.mode.questionType, allowedQuestionTypes[random]);
+        mediator.questionAsked(this.currentQuestion);        
     }
     
 }

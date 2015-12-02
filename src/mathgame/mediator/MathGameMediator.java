@@ -45,6 +45,14 @@ public class MathGameMediator {
         screens.endGame();
     }
     
+    public long getTimeLeftForQuestion() {
+        return game.getTimeLeft();
+    }
+    
+    public long getInitialTimeForQuestion() {
+        return game.getInitialTime();
+    }
+    
     public void questionAnswered(String answer) {
         game.answerQuestion(answer);
     }

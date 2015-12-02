@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.UIManager;
+import javax.swing.Timer;
 import mathgame.game.GameMode;
 import mathgame.questions.Answer;
 import mathgame.util.calculator.Calculator;
@@ -22,8 +22,8 @@ import mathgame.mediator.MathGameMediator;
  *
  * @author Feilan
  */
-public class Screens extends javax.swing.JFrame {
-
+public class Screens extends javax.swing.JFrame /*implements PropertyChangeListener*/ {
+    
     /**
      * Creates new form Screens
      * @param mediator
@@ -94,6 +94,8 @@ public class Screens extends javax.swing.JFrame {
         questionLabel = new javax.swing.JLabel();
         quitButton = new javax.swing.JButton();
         calculatorTextField = new javax.swing.JTextField();
+        timeProgressBar = new javax.swing.JProgressBar();
+        healthProgressBar = new javax.swing.JProgressBar();
 
         scoreDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         scoreDialog.setMinimumSize(new java.awt.Dimension(200, 150));
@@ -207,7 +209,7 @@ public class Screens extends javax.swing.JFrame {
         screens.add(startScreen, "startScreen");
 
         gameScreen.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        gameScreen.setLayout(new java.awt.BorderLayout(0, 10));
+        gameScreen.setLayout(new java.awt.GridBagLayout());
 
         questionSplitPane.setResizeWeight(0.5);
         questionSplitPane.setToolTipText("");
@@ -221,7 +223,7 @@ public class Screens extends javax.swing.JFrame {
         );
         answerContentLayout.setVerticalGroup(
             answerContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 17, Short.MAX_VALUE)
+            .addGap(0, 32, Short.MAX_VALUE)
         );
 
         questionSplitPane.setRightComponent(answerContent);
@@ -230,7 +232,13 @@ public class Screens extends javax.swing.JFrame {
         questionLabel.setText("jLabel2");
         questionSplitPane.setLeftComponent(questionLabel);
 
-        gameScreen.add(questionSplitPane, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.9;
+        gameScreen.add(questionSplitPane, gridBagConstraints);
 
         quitButton.setText("Quit");
         quitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -238,7 +246,14 @@ public class Screens extends javax.swing.JFrame {
                 quitButtonActionPerformed(evt);
             }
         });
-        gameScreen.add(quitButton, java.awt.BorderLayout.PAGE_END);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.15;
+        gridBagConstraints.weighty = 0.1;
+        gameScreen.add(quitButton, gridBagConstraints);
 
         calculatorTextField.setToolTipText("Calculator");
         calculatorTextField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -246,7 +261,29 @@ public class Screens extends javax.swing.JFrame {
                 calculatorTextFieldKeyTyped(evt);
             }
         });
-        gameScreen.add(calculatorTextField, java.awt.BorderLayout.PAGE_START);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.05;
+        gameScreen.add(calculatorTextField, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.85;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gameScreen.add(timeProgressBar, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.85;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gameScreen.add(healthProgressBar, gridBagConstraints);
 
         screens.add(gameScreen, "gameScreen");
 
@@ -258,7 +295,7 @@ public class Screens extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(screens, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(screens, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
         );
 
         pack();
@@ -282,18 +319,7 @@ public class Screens extends javax.swing.JFrame {
         JTextField textField = (JTextField) evt.getSource();
         
         if (evt.getKeyChar() == KeyEvent.VK_ENTER && !textField.getText().equals("")) {
-            String answer = Calculator.eval(textField.getText(), false);
-            
-            // temp code
-            /*JFreeChart lineChart = ChartFactory.createXYLineChart(
-                "f(x) = " + textField.getText(),
-                "x", "f(x)",
-                createDataset(textField.getText(), -10.0, 10.0),
-                PlotOrientation.VERTICAL,
-                true, true, false);
-            ChartPanel chartPanel = new ChartPanel(lineChart);
-            questionContent.add(chartPanel, BorderLayout.CENTER);*/
-                    
+            String answer = Calculator.eval(textField.getText(), false);                    
             textField.setText((answer == null) ? "Error" : answer);
         }
     }//GEN-LAST:event_calculatorTextFieldKeyTyped
@@ -312,28 +338,47 @@ public class Screens extends javax.swing.JFrame {
     //TODO: implement health bar
     //TODO: implement timer display
     
+    /*@Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress".equals(evt.getPropertyName())) {
+            int progress = (Integer) evt.getNewValue();            
+            timeProgressBar.setValue(progress);
+        }        
+    }*/
+    
     private void answerTextFieldKeyTyped(KeyEvent evt) {
         JTextField textField = (JTextField) evt.getSource();
         String answer = textField.getText();
         
         if (evt.getKeyChar() == KeyEvent.VK_ENTER && !answer.equals("")) {        
+//            timeTask.cancel(true);
             mediator.questionAnswered(answer);            
         }
     }
     
     private void answerButtonActionPerformed(ActionEvent evt) {
         JButton button = (JButton) evt.getSource();
+//        timeTask.cancel(true);
         mediator.questionAnswered(button.getText());
     }
     
     public void loadQuestion(Answer question) {        
         answerContent.removeAll();
-        questionLabel.setText(question.getPrompt()); // TODO: or is it getSolution()?
+        questionLabel.setText(question.getPrompt());        
+        
+        timeProgressBar.setMaximum((int) mediator.getInitialTimeForQuestion());
+        timeProgressBar.setValue(timeProgressBar.getMaximum());
+        
+//        timeTask = new TimeTask();
+//        timeTask.addPropertyChangeListener(this);
+//        timeTask.execute();            
+        
+
 
         if (question.isMultipleChoice()) {            
             int numButtons = question.getMultipleChoiceAnswers().length;
             answerContentGridLayout.setRows(numButtons);
-            
+
             for (String answer : question.getMultipleChoiceAnswers()) {
                 answerButton = new JButton();
                 answerButton.setText(answer);
@@ -343,10 +388,12 @@ public class Screens extends javax.swing.JFrame {
                 answerContent.add(answerButton);
             }
         } else {
+            answerTextField.setText("");
             answerContentGridLayout.setRows(1);
             answerContent.add(answerTextField);            
-        }
-        this.revalidate();
+        }            
+
+        this.revalidate();    
     }
     
     public void endGame() {
@@ -355,7 +402,7 @@ public class Screens extends javax.swing.JFrame {
         scoreDialog.setVisible(true);        
     }
     
-    private void showGameScreen() {
+    private void showGameScreen() {        
         CardLayout card = (CardLayout) screens.getLayout();
         card.show(screens, "gameScreen");
         calculatorTextField.setText("");
@@ -383,12 +430,40 @@ public class Screens extends javax.swing.JFrame {
         return dataset;
     }*/
     
+    /*private class TimeTask extends SwingWorker<Void, Void> {        
+        @Override
+        public Void doInBackground() {                        
+            int timeLeft = (int) mediator.getInitialTimeForQuestion();
+            
+            
+            while (timeLeft > 0) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                
+                timeLeft = (int) mediator.getTimeLeftForQuestion();
+                setProgress(timeLeft);                
+            };                       
+            
+            return null;
+        }
+        
+        @Override
+        public void done() {
+            System.out.println("nigga nigga");
+        }
+    }*/
+    
     private MathGameMediator mediator;
     private JLabel promptLabel;
-//    private ChartPanel promptChartPanel;
     private JButton answerButton;
     private JTextField answerTextField;
     private GridLayout answerContentGridLayout;
+    private Timer timer;
+//    private TimeTask timeTask;
+//    private Task healthTask;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton algebraButton;
@@ -399,6 +474,7 @@ public class Screens extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler11;
     private javax.swing.Box.Filler filler12;
     private javax.swing.JPanel gameScreen;
+    private javax.swing.JProgressBar healthProgressBar;
     private javax.swing.JLabel questionLabel;
     private javax.swing.JSplitPane questionSplitPane;
     private javax.swing.JButton quitButton;
@@ -407,6 +483,7 @@ public class Screens extends javax.swing.JFrame {
     private javax.swing.JLabel scoreLabel;
     private javax.swing.JPanel screens;
     private javax.swing.JPanel startScreen;
+    private javax.swing.JProgressBar timeProgressBar;
     private javax.swing.JButton trigButton;
     private javax.swing.JLabel trigStatsLabel;
     // End of variables declaration//GEN-END:variables
